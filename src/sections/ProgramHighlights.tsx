@@ -28,13 +28,14 @@ import {
   CheckCircle2
 } from "lucide-react";
 
+import { CENTERS } from "@/data/content";
+
 // Form Schema validation
 const workshopSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   center: z.string().min(1, "Please select a training center"),
-  agree: z.boolean().refine((val) => val === true, "You must agree to continue"),
 });
 
 type WorkshopFormValues = z.infer<typeof workshopSchema>;
@@ -55,8 +56,7 @@ export const ProgramHighlights = () => {
       name: "",
       phone: "",
       email: "",
-      center: "",
-      agree: false,
+      center: "Noida",
     },
   });
 
@@ -359,33 +359,18 @@ export const ProgramHighlights = () => {
                             errors.center ? "border-red-500" : "border-zinc-300"
                           }`}
                         >
-                          <option value="">Choose Center Near You</option>
-                          <option value="noida">Noida Campus</option>
-                          <option value="delhi">Delhi (Connaught Place)</option>
-                          <option value="gurgaon">Gurgaon (Sector 14)</option>
+                          <option value="">Choose Center Near You..</option>
+                          {CENTERS.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
                     </div>
 
-                    {/* Terms Checkbox */}
-                    <div className="flex flex-col gap-1 mt-2">
-                      <label className="flex items-start gap-2.5 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          disabled={isSubmitting}
-                          {...register("agree")}
-                          className="mt-1 h-4 w-4 rounded border-zinc-300 text-brand-red focus:ring-brand-red/30 cursor-pointer shrink-0"
-                        />
-                        <span className="text-xs text-zinc-500 leading-snug select-none font-semibold">
-                          I agree to the DIDM{" "}
-                          <a href="#" className="text-brand-red hover:underline">Terms of Use</a>{" "}
-                          and{" "}
-                          <a href="#" className="text-brand-red hover:underline">Privacy Policy</a>
-                        </span>
-                      </label>
-                      {errors.agree && <span className="text-xs text-red-500 font-semibold">{errors.agree.message}</span>}
-                    </div>
+
 
                     {/* Submit Button */}
                     <Button

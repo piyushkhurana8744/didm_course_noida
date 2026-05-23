@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu, X, Phone, CalendarRange } from "lucide-react";
+import { Menu, X, CalendarRange } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScroll } from "@/hooks/useScroll";
 import { motion, AnimatePresence } from "framer-motion";
@@ -99,15 +99,6 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
             {/* Desktop CTA Buttons */}
             <div className="hidden lg:flex items-center gap-3">
               <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2 border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-50 font-bold"
-                onClick={() => window.open("tel:+919876543210")}
-              >
-                <Phone className="h-4 w-4 text-brand-red" />
-                <span>+91 98765 43210</span>
-              </Button>
-              <Button
                 variant="primary"
                 size="sm"
                 className="flex items-center gap-2 shadow-md shadow-brand-red/10"
@@ -176,18 +167,6 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
               </div>
 
               <div className="flex flex-col gap-3 mt-8 border-t border-zinc-200 pt-6">
-                <Button
-                  variant="outline"
-                  size="md"
-                  className="w-full flex items-center justify-center gap-2 border-zinc-300 text-zinc-700 bg-white font-bold"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.open("tel:+919876543210");
-                  }}
-                >
-                  <Phone className="h-4 w-4 text-brand-red" />
-                  <span>Call +91 98765 43210</span>
-                </Button>
                 <Button
                   variant="primary"
                   size="md"

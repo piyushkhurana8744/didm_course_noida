@@ -576,3 +576,23 @@ export const FAQ_DATA: FAQItem[] = [
     answer: "After completing DIDM's best digital marketing course in Noida, you will have access to a variety of career opportunities. These include: Search engine optimization (SEO) specialist, Pay-per-click (PPC) advertising specialist, Social media marketing specialist, Content marketing specialist, Email marketing specialist, Web analytics specialist, Digital marketing executive / manager, Performance marketing executive / manager, Digital Marketing Coordinator, Customer Success Manager, and so on."
   }
 ];
+
+export const CENTERS = [
+  "Dwarka",
+  "Gurgaon",
+  "Kalkaji",
+  "Noida",
+  "Preet Vihar",
+  "Rajouri Garden",
+  "Satya Niketan",
+  "Pitampura",
+  "South Ex",
+  "Dehradun",
+  "Haldwani",
+  "Mumbai",
+  "Meerut",
+  "Jaipur",
+  "Varanasi",
+  "Online"
+];
+

@@ -10,13 +10,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Phone, Mail, ChevronDown, Play, Sparkles, Star, Quote } from "lucide-react";
 
+import { CENTERS } from "@/data/content";
+
 // Zod Schema
 const counsellingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   center: z.string().min(1, "Please select a training center"),
-  agree: z.boolean().refine((val) => val === true, "You must agree to the terms"),
 });
 
 type CounsellingFormValues = z.infer<typeof counsellingSchema>;
@@ -37,8 +38,7 @@ export const VideoCounselling = () => {
       name: "",
       phone: "",
       email: "",
-      center: "",
-      agree: false,
+      center: "Noida",
     },
   });
 
@@ -230,33 +230,18 @@ export const VideoCounselling = () => {
                       }`}
                     >
                       <option value="">Choose Center Near You..</option>
-                      <option value="noida">Noida Campus</option>
-                      <option value="delhi">Delhi (Connaught Place)</option>
-                      <option value="gurgaon">Gurgaon (Sector 14)</option>
+                      {CENTERS.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
                     </select>
                     <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-zinc-500 pointer-events-none" />
                   </div>
                   {errors.center && <span className="text-xs text-amber-300 font-bold">{errors.center.message}</span>}
                 </div>
 
-                {/* Checkbox */}
-                <div className="flex flex-col gap-1 mt-2">
-                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      disabled={isSubmitting}
-                      {...register("agree")}
-                      className="mt-1 h-4 w-4 rounded border-transparent text-brand-red focus:ring-white/30 cursor-pointer shrink-0 bg-white"
-                    />
-                    <span className="text-xs text-zinc-100 font-semibold leading-relaxed">
-                      I agree to the DIDM{" "}
-                      <a href="#" className="underline text-white font-bold hover:text-zinc-200">Terms of Use</a>{" "}
-                      and{" "}
-                      <a href="#" className="underline text-white font-bold hover:text-zinc-200">Privacy Policy</a>
-                    </span>
-                  </label>
-                  {errors.agree && <span className="text-xs text-amber-300 font-bold">{errors.agree.message}</span>}
-                </div>
+
 
                 {/* Submit button */}
                 <Button

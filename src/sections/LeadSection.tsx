@@ -8,14 +8,15 @@ import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, Sparkles, ShieldCheck, Mail, Phone, User, BookOpen } from "lucide-react";
+import { Play, Sparkles, ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
+import { CENTERS } from "@/data/content";
 
 // Zod Schema
 const inquirySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits").max(12, "Phone number cannot exceed 12 digits"),
-  course: z.string().min(1, "Please select a course"),
+  center: z.string().min(1, "Please select a training center"),
 });
 
 type InquiryFormValues = z.infer<typeof inquirySchema>;
@@ -39,7 +40,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
       name: "",
       email: "",
       phone: "",
-      course: "",
+      center: "Noida",
     },
   });
 
@@ -50,10 +51,15 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
     setIsSubmitting(false);
 
     toast(
-      `Thank you, ${data.name}! Your free demo class seat is reserved. We will call you shortly on ${data.phone}.`,
+      `Thank you, ${data.name}! Your free demo class seat is reserved at our ${data.center} center. We will call you shortly on ${data.phone}.`,
       "success"
     );
-    reset();
+    reset({
+      name: "",
+      email: "",
+      phone: "",
+      center: "Noida",
+    });
   };
 
   return (
@@ -210,28 +216,30 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                   )}
                 </div>
 
-                {/* Course Selection */}
-                <div className="flex flex-col gap-1.5 text-left">
-                  <label htmlFor="course" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <BookOpen className="h-3.5 w-3.5 text-brand-red" /> Select Program
-                  </label>
-                  <select
-                    id="course"
-                    {...register("course")}
-                    disabled={isSubmitting}
-                    className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all cursor-pointer ${
-                      errors.course ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
-                    }`}
-                  >
-                    <option value="" className="bg-white text-zinc-800">-- Select Course Program --</option>
-                    <option value="basic" className="bg-white text-zinc-800">Basic Certificate (2 Months)</option>
-                    <option value="diploma" className="bg-white text-zinc-800">Professional Diploma (4 Months)</option>
-                    <option value="master" className="bg-white text-zinc-800">Master Program in Growth Marketing (6 Months)</option>
-                  </select>
-                  {errors.course && (
-                    <span className="text-xs text-red-500 font-semibold">{errors.course.message}</span>
-                  )}
-                </div>
+                 {/* Center Selection */}
+                 <div className="flex flex-col gap-1.5 text-left">
+                   <label htmlFor="center" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                     <MapPin className="h-3.5 w-3.5 text-brand-red" /> Choose Center Near You..
+                   </label>
+                   <select
+                     id="center"
+                     {...register("center")}
+                     disabled={isSubmitting}
+                     className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all cursor-pointer ${
+                       errors.center ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
+                     }`}
+                   >
+                     <option value="" className="bg-white text-zinc-800">Choose Center Near You..</option>
+                     {CENTERS.map((c) => (
+                       <option key={c} value={c} className="bg-white text-zinc-800">
+                         {c}
+                       </option>
+                     ))}
+                   </select>
+                   {errors.center && (
+                     <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>
+                   )}
+                 </div>
 
                 {/* Privacy Guarantee */}
                 <div className="flex items-center gap-2 py-1 text-left">

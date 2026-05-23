@@ -20,8 +20,8 @@ interface ContactMapProps {
 }
 
 export const ContactMap = ({ onOpenDemo }: ContactMapProps) => {
-  const mapUrl = "https://maps.app.goo.gl/PzTkE33Y1hW8dSWh9";
-  const embedMapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.7088194488667!2d77.32360211130635!3d28.571932375598157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce449c3621415%3A0x5fc2f3e5b38d3bfd!2sDelhi+Institute+of+Digital+Marketing+-+Noida!5e0!3m2!1sen!2sin!4v1716474000000!5m2!1sen!2sin";
+  const mapUrl = "https://maps.app.goo.gl/1s6ZFYBVPEUUrTZb7";
+  const embedMapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.7745778848135!2d77.32417447630248!3d28.570533575598852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5148478ff0b%3A0x5fb4bd0f3181c3bd!2sDelhi+Institute+of+Digital+Marketing+-+Noida!5e0!3m2!1sen!2sin!4v1716474000000!5m2!1sen!2sin";
 
   return (
     <section className="py-20 bg-[#f8fafc] border-b border-zinc-200 relative overflow-hidden">
@@ -185,7 +185,7 @@ export const ContactMap = ({ onOpenDemo }: ContactMapProps) => {
                 onClick={() => window.open(mapUrl, "_blank")}
                 className="w-full bg-zinc-950 hover:bg-zinc-900 text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer shadow-md hover:shadow-lg uppercase text-[11px] tracking-wider flex items-center justify-center gap-2"
               >
-                Get Directions
+                Get Direction
                 <ExternalLink className="h-3.5 w-3.5 shrink-0" />
               </Button>
             </div>

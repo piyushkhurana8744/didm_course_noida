@@ -32,14 +32,15 @@ import { useToast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ShieldCheck, Mail, Phone, User, BookOpen } from "lucide-react";
+import { ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
+import { CENTERS } from "@/data/content";
 
 // Modal lead schema
 const modalSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  course: z.string().min(1, "Please select a program"),
+  center: z.string().min(1, "Please select a center near you"),
 });
 
 type ModalFormValues = z.infer<typeof modalSchema>;
@@ -67,22 +68,14 @@ export default function Home() {
       name: "",
       email: "",
       phone: "",
-      course: "",
+      center: "Noida",
     },
   });
 
-  // Open demo class registration with pre-selected course
+  // Open demo class registration
   const triggerDemoModal = (courseName: string = "") => {
-    if (courseName) {
-      setSelectedCourse(courseName);
-      // Map display name to select value
-      if (courseName.includes("Basic")) setValue("course", "basic");
-      else if (courseName.includes("Professional")) setValue("course", "diploma");
-      else if (courseName.includes("Master")) setValue("course", "master");
-    } else {
-      setSelectedCourse("Free Demo Class");
-      setValue("course", "");
-    }
+    setSelectedCourse(courseName || "Free Demo Class");
+    setValue("center", "Noida");
     setIsDemoOpen(true);
   };
 
@@ -92,8 +85,13 @@ export default function Home() {
     setIsSubmitting(false);
     setIsDemoOpen(false);
     
-    toast(`Thank you, ${data.name}! Your seats for the ${data.course.toUpperCase()} free trial class are locked. Check your email for details.`, "success");
-    reset();
+    toast(`Thank you, ${data.name}! Your seats for the free trial class are locked at our ${data.center} center. Check your email for details.`, "success");
+    reset({
+      name: "",
+      email: "",
+      phone: "",
+      center: "Noida",
+    });
   };
 
   const handleBrochureSubmit = async (e: React.FormEvent) => {
@@ -102,8 +100,9 @@ export default function Home() {
     const name = formData.get("brochure-name");
     const email = formData.get("brochure-email");
     const phone = formData.get("brochure-phone");
+    const center = formData.get("brochure-center");
 
-    if (!name || !email || !phone) {
+    if (!name || !email || !phone || !center) {
       toast("Please fill all fields to download the brochure.", "error");
       return;
     }
@@ -113,7 +112,7 @@ export default function Home() {
     setIsSubmitting(false);
     setIsBrochureOpen(false);
     
-    toast(`Syllabus brochure generated! Download starting automatically for ${email}.`, "success");
+    toast(`Syllabus brochure generated for ${center} center! Download starting automatically for ${email}.`, "success");
     // Trigger mock file download
     window.open("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "_blank");
   };
@@ -238,21 +237,23 @@ export default function Home() {
 
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <BookOpen className="h-3.5 w-3.5 text-brand-red" /> Program Course
+              <MapPin className="h-3.5 w-3.5 text-brand-red" /> Choose Center Near You..
             </label>
             <select
-              {...register("course")}
+              {...register("center")}
               disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
-                errors.course ? "border-red-500" : "border-zinc-300"
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer ${
+                errors.center ? "border-red-500" : "border-zinc-300"
               }`}
             >
-              <option value="">-- Select --</option>
-              <option value="basic">Basic Certificate (2 Months)</option>
-              <option value="diploma">Professional Diploma (4 Months)</option>
-              <option value="master">Master Growth Program (6 Months)</option>
+              <option value="">Choose Center Near You..</option>
+              {CENTERS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
-            {errors.course && <span className="text-xs text-red-500 font-semibold">{errors.course.message}</span>}
+            {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
           </div>
 
           <div className="flex items-center gap-2 py-1">
@@ -322,6 +323,26 @@ export default function Home() {
               disabled={isSubmitting}
               className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
             />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="b-center" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-brand-red" /> Choose Center Near You..
+            </label>
+            <select
+              id="b-center"
+              name="brochure-center"
+              required
+              disabled={isSubmitting}
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer"
+            >
+              <option value="">Choose Center Near You..</option>
+              {CENTERS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
 
           <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-4 cursor-pointer">
