@@ -1,0 +1,355 @@
+"use client";
+
+import * as React from "react";
+import { Header } from "@/sections/Header";
+import { Hero } from "@/sections/Hero";
+import { ProgramHighlights } from "@/sections/ProgramHighlights";
+import { VideoCounselling } from "@/sections/VideoCounselling";
+import { CourseOverview } from "@/sections/CourseOverview";
+import { CoursePrograms } from "@/sections/CoursePrograms";
+import { TrainingSchedule } from "@/sections/TrainingSchedule";
+import { CoveredModules } from "@/sections/CoveredModules";
+import { CoveredModulesTabs } from "@/sections/CoveredModulesTabs";
+import { WhyChooseUs } from "@/sections/WhyChooseUs";
+import { Curriculum } from "@/sections/Curriculum";
+import { ComparisonTable } from "@/sections/ComparisonTable";
+import { Pricing } from "@/sections/Pricing";
+import { Testimonials } from "@/sections/Testimonials";
+import { Placement } from "@/sections/Placement";
+import { ReasonsToJoin } from "@/sections/ReasonsToJoin";
+import { Gallery } from "@/sections/Gallery";
+import { FAQ } from "@/sections/FAQ";
+import { StudentFeedback } from "@/sections/StudentFeedback";
+import { StudentsCorner } from "@/sections/StudentsCorner";
+import { StudentsHappyFaces } from "@/sections/StudentsHappyFaces";
+import { DigitalCareerStart } from "@/sections/DigitalCareerStart";
+import { ContactMap } from "@/sections/ContactMap";
+import { Footer } from "@/sections/Footer";
+import { FloatingWidgets } from "@/components/FloatingWidgets";
+import { Dialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ShieldCheck, Mail, Phone, User, BookOpen } from "lucide-react";
+
+// Modal lead schema
+const modalSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  course: z.string().min(1, "Please select a program"),
+});
+
+type ModalFormValues = z.infer<typeof modalSchema>;
+
+export default function Home() {
+  const { toast } = useToast();
+  
+  // Dialog visibility states
+  const [isDemoOpen, setIsDemoOpen] = React.useState(false);
+  const [isBrochureOpen, setIsBrochureOpen] = React.useState(false);
+  const [videoUrl, setVideoUrl] = React.useState<string | null>(null);
+  const [selectedCourse, setSelectedCourse] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  // Form hooks for modal
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<ModalFormValues>({
+    resolver: zodResolver(modalSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      course: "",
+    },
+  });
+
+  // Open demo class registration with pre-selected course
+  const triggerDemoModal = (courseName: string = "") => {
+    if (courseName) {
+      setSelectedCourse(courseName);
+      // Map display name to select value
+      if (courseName.includes("Basic")) setValue("course", "basic");
+      else if (courseName.includes("Professional")) setValue("course", "diploma");
+      else if (courseName.includes("Master")) setValue("course", "master");
+    } else {
+      setSelectedCourse("Free Demo Class");
+      setValue("course", "");
+    }
+    setIsDemoOpen(true);
+  };
+
+  const handleDemoSubmit = async (data: ModalFormValues) => {
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    setIsDemoOpen(false);
+    
+    toast(`Thank you, ${data.name}! Your seats for the ${data.course.toUpperCase()} free trial class are locked. Check your email for details.`, "success");
+    reset();
+  };
+
+  const handleBrochureSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const name = formData.get("brochure-name");
+    const email = formData.get("brochure-email");
+    const phone = formData.get("brochure-phone");
+
+    if (!name || !email || !phone) {
+      toast("Please fill all fields to download the brochure.", "error");
+      return;
+    }
+
+    setIsSubmitting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setIsSubmitting(false);
+    setIsBrochureOpen(false);
+    
+    toast(`Syllabus brochure generated! Download starting automatically for ${email}.`, "success");
+    // Trigger mock file download
+    window.open("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "_blank");
+  };
+
+  return (
+    <>
+      {/* Sticky header navigation */}
+      <Header onOpenDemo={() => triggerDemoModal()} />
+
+      {/* Main Page Layout Sections */}
+      <main className="flex-1 w-full">
+        {/* 1. Hero Section */}
+        <Hero />
+
+        {/* 2. Program Highlights */}
+        <ProgramHighlights />
+
+        {/* 3. Video & Counselling Form */}
+        <VideoCounselling />
+
+        {/* 3b. Course Overview details */}
+        <CourseOverview />
+
+        {/* 3c. Course learning pathways (MIDM, Advanced, Customized) */}
+        <CoursePrograms onOpenDemo={triggerDemoModal} />
+
+        {/* 3d. Training schedule and qualifications (Noida) */}
+        <TrainingSchedule onOpenDemo={triggerDemoModal} />
+
+        {/* 3e. 50+ Modules list covered in Noida master program */}
+        <CoveredModules onOpenDemo={triggerDemoModal} />
+
+        {/* 3f. Interactive module details tabs (Adwords, SEO, SMM, Adsense, etc.) */}
+        <CoveredModulesTabs onOpenDemo={triggerDemoModal} />
+
+        {/* 7. Detailed Course comparison grid */}
+        <ComparisonTable onOpenDemo={triggerDemoModal} />
+
+        {/* 7b. Noida Student Feedback Grid */}
+        <StudentFeedback />
+
+        {/* 7a. Noida Branch Students Corner Carousel */}
+        <StudentsCorner />
+
+        {/* 7b. Students Happy Faces Gallery */}
+        <StudentsHappyFaces />
+
+        {/* 7c. Let Your Digital Career Begins Now - CTA Cards */}
+        <DigitalCareerStart onOpenDemo={triggerDemoModal} />
+
+        {/* 12. FAQ Accordions */}
+        <FAQ />
+
+        {/* 13. Map & Office Helpline Desk */}
+        <ContactMap onOpenDemo={triggerDemoModal} />
+      </main>
+
+      {/* Footer credits and newsletter sign-up */}
+      <Footer />
+
+      {/* Floating widgets (WhatsApp, back to top, mobile sticky bottom) */}
+      <FloatingWidgets onOpenDemo={() => triggerDemoModal()} />
+
+      {/* ================================================== */}
+      {/* DIALOG POPUPS */}
+      {/* ================================================== */}
+
+      {/* A. Free Demo Booking Modal */}
+      <Dialog
+        isOpen={isDemoOpen}
+        onClose={() => setIsDemoOpen(false)}
+        title={selectedCourse ? `Register: ${selectedCourse}` : "Book Your Free Demo Class"}
+      >
+        <form onSubmit={handleSubmit(handleDemoSubmit)} className="space-y-4 text-left">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5 text-brand-red" /> Full Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Rahul Sharma"
+              {...register("name")}
+              disabled={isSubmitting}
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+                errors.name ? "border-red-500" : "border-zinc-300"
+              }`}
+            />
+            {errors.name && <span className="text-xs text-red-500 font-semibold">{errors.name.message}</span>}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <Mail className="h-3.5 w-3.5 text-brand-red" /> Email
+            </label>
+            <input
+              type="email"
+              placeholder="e.g. rahul@gmail.com"
+              {...register("email")}
+              disabled={isSubmitting}
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+                errors.email ? "border-red-500" : "border-zinc-300"
+              }`}
+            />
+            {errors.email && <span className="text-xs text-red-500 font-semibold">{errors.email.message}</span>}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <Phone className="h-3.5 w-3.5 text-brand-red" /> Mobile Phone
+            </label>
+            <input
+              type="tel"
+              placeholder="98765 43210"
+              {...register("phone")}
+              disabled={isSubmitting}
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+                errors.phone ? "border-red-500" : "border-zinc-300"
+              }`}
+            />
+            {errors.phone && <span className="text-xs text-red-500 font-semibold">{errors.phone.message}</span>}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <BookOpen className="h-3.5 w-3.5 text-brand-red" /> Program Course
+            </label>
+            <select
+              {...register("course")}
+              disabled={isSubmitting}
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+                errors.course ? "border-red-500" : "border-zinc-300"
+              }`}
+            >
+              <option value="">-- Select --</option>
+              <option value="basic">Basic Certificate (2 Months)</option>
+              <option value="diploma">Professional Diploma (4 Months)</option>
+              <option value="master">Master Growth Program (6 Months)</option>
+            </select>
+            {errors.course && <span className="text-xs text-red-500 font-semibold">{errors.course.message}</span>}
+          </div>
+
+          <div className="flex items-center gap-2 py-1">
+            <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+            <span className="text-[10px] text-zinc-500 font-bold">
+              ISO 9001:2015 Admissions Desk. Support hours: 9AM - 7PM daily.
+            </span>
+          </div>
+
+          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-2 cursor-pointer">
+            {isSubmitting ? "Locking Seat..." : "Confirm Free Class Booking"}
+          </Button>
+        </form>
+      </Dialog>
+
+      {/* B. Download Syllabus Brochure Modal */}
+      <Dialog
+        isOpen={isBrochureOpen}
+        onClose={() => setIsBrochureOpen(false)}
+        title="Download Course Brochure"
+      >
+        <form onSubmit={handleBrochureSubmit} className="space-y-4 text-left">
+          <p className="text-xs text-zinc-600 mb-2 leading-relaxed font-medium">
+            Enter your details below to receive the complete 2026 digital marketing curriculum PDF file directly on your device.
+          </p>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="b-name" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5 text-brand-red" /> Full Name
+            </label>
+            <input
+              id="b-name"
+              name="brochure-name"
+              type="text"
+              required
+              placeholder="e.g. Rahul Sharma"
+              disabled={isSubmitting}
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="b-email" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <Mail className="h-3.5 w-3.5 text-brand-red" /> Email
+            </label>
+            <input
+              id="b-email"
+              name="brochure-email"
+              type="email"
+              required
+              placeholder="e.g. rahul@gmail.com"
+              disabled={isSubmitting}
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="b-phone" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              <Phone className="h-3.5 w-3.5 text-brand-red" /> Mobile Phone
+            </label>
+            <input
+              id="b-phone"
+              name="brochure-phone"
+              type="tel"
+              required
+              placeholder="98765 43210"
+              disabled={isSubmitting}
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+            />
+          </div>
+
+          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-4 cursor-pointer">
+            {isSubmitting ? "Generating PDF..." : "Download Free Brochure Now"}
+          </Button>
+        </form>
+      </Dialog>
+
+      {/* C. Video Testimonial Player Modal */}
+      <Dialog
+        isOpen={videoUrl !== null}
+        onClose={() => setVideoUrl(null)}
+        title="Student Success Verification"
+      >
+        <div className="aspect-video w-full rounded-lg overflow-hidden border border-zinc-200 bg-black">
+          {videoUrl && (
+            <video
+              src={videoUrl}
+              controls
+              autoPlay
+              className="w-full h-full object-contain"
+            />
+          )}
+        </div>
+        <p className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider text-center mt-4">
+          Unedited review. Hosted for admissions verification purposes.
+        </p>
+      </Dialog>
+    </>
+  );
+}
