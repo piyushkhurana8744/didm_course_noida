@@ -51,8 +51,8 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? "bg-white/95 border-b border-zinc-200/85 backdrop-blur-md py-4 shadow-md"
-            : "bg-white/85 border-b border-zinc-150 backdrop-blur-sm py-6 sm:py-7"
+            ? "bg-white/95 border-b border-zinc-200/85 backdrop-blur-md py-2 shadow-md"
+            : "bg-white/85 border-b border-zinc-150 backdrop-blur-sm py-3 sm:py-3.5"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,17 +67,17 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
                 <img
                   src="/didm-logo-reg.png"
                   alt="DIDM Logo"
-                  className="h-12 sm:h-16 md:h-18 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
+                  className="h-11 sm:h-13 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
                 />
               </a>
 
               {/* Vertical divider and MSME Logo */}
-              <div className="h-10 sm:h-12 w-px bg-zinc-300 mx-4 hidden xs:block" />
+              <div className="h-8 sm:h-9 w-px bg-zinc-300 mx-4 hidden xs:block" />
               
               <img
                 src="/msme logo.png"
                 alt="MSME Logo"
-                className="h-9 sm:h-12 md:h-13 w-auto object-contain hidden xs:block"
+                className="h-8 sm:h-10 md:h-11 w-auto object-contain hidden xs:block"
               />
             </div>
 

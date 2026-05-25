@@ -187,16 +187,6 @@ export const ProgramHighlights = () => {
 
   return (
     <div className="w-full flex flex-col bg-white">
-      
-      {/* 1. Sleek Red Branding Ribbon */}
-      <div className="w-full bg-gradient-to-r from-brand-red via-red-600 to-brand-red py-4 text-center shadow-md relative overflow-hidden">
-        {/* Animated accent gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
-        <h2 className="text-white text-base sm:text-lg lg:text-xl font-extrabold tracking-widest uppercase flex items-center justify-center gap-2">
-          <span>★</span> India's Most Promising Brand <span>★</span>
-        </h2>
-      </div>
-
       {/* 2. Program Highlights Section */}
       <section id="highlights" className="py-20 bg-zinc-50 border-b border-zinc-200 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

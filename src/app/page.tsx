@@ -175,6 +175,15 @@ export default function Home() {
         {/* 1. Hero Section */}
         <Hero />
 
+        {/* Branding Ribbon */}
+        <div className="w-full bg-gradient-to-r from-brand-red via-red-600 to-brand-red py-4 text-center shadow-md relative overflow-hidden">
+          {/* Animated accent gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse" />
+          <h2 className="text-white text-base sm:text-lg lg:text-xl font-extrabold tracking-widest uppercase flex items-center justify-center gap-2">
+            <span>★</span> India's Most Promising Brand <span>★</span>
+          </h2>
+        </div>
+
         {/* 7c. Let Your Digital Career Begins Now - CTA Cards */}
         <DigitalCareerStart onOpenDemo={triggerDemoModal} />
 
