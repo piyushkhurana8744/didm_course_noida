@@ -10,12 +10,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Phone, Mail, ChevronDown, Play, Sparkles, Star, Quote } from "lucide-react";
 
+import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 
 // Zod Schema
 const counsellingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   center: z.string().min(1, "Please select a training center"),
 });
@@ -24,6 +25,7 @@ type CounsellingFormValues = z.infer<typeof counsellingSchema>;
 
 export const VideoCounselling = () => {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
@@ -44,10 +46,27 @@ export const VideoCounselling = () => {
 
   const onSubmit = async (data: CounsellingFormValues) => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          center: data.center,
+          formType: "Free Counselling Request Form",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to shoot email lead:", err);
+    }
+
     setIsSubmitting(false);
     toast(`Counselling request locked! Our Noida career specialist will call you back on ${data.phone} within 15 minutes.`, "success");
     reset();
+    router.push("/thank-you");
   };
 
   return (
@@ -191,8 +210,13 @@ export const VideoCounselling = () => {
                     <input
                       type="tel"
                       placeholder="Phone"
+                      maxLength={10}
                       disabled={isSubmitting}
-                      {...register("phone")}
+                      {...register("phone", {
+                        onChange: (e) => {
+                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        }
+                      })}
                       className={`w-full bg-white border rounded-lg py-3 px-4 pr-10 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                         errors.phone ? "border-amber-400" : "border-transparent"
                       }`}

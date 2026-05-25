@@ -27,13 +27,13 @@ import {
   Flame,
   CheckCircle2
 } from "lucide-react";
-
+import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 
 // Form Schema validation
 const workshopSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   email: z.string().email("Please enter a valid email address"),
   center: z.string().min(1, "Please select a training center"),
 });
@@ -42,6 +42,7 @@ type WorkshopFormValues = z.infer<typeof workshopSchema>;
 
 export const ProgramHighlights = () => {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
 
@@ -62,10 +63,27 @@ export const ProgramHighlights = () => {
 
   const onSubmitInquiry = async (data: WorkshopFormValues) => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          center: data.center,
+          formType: "Attend Free Workshop Form",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to shoot email lead:", err);
+    }
+
     setIsSubmitting(false);
     toast(`Successfully registered! We have booked your seat at the ${data.center.toUpperCase()} workshop. check email for schedule.`, "success");
     reset();
+    router.push("/thank-you");
   };
 
   const featureItems = [
@@ -321,8 +339,13 @@ export const ProgramHighlights = () => {
                         <input
                           type="tel"
                           placeholder="Phone"
+                          maxLength={10}
                           disabled={isSubmitting}
-                          {...register("phone")}
+                          {...register("phone", {
+                            onChange: (e) => {
+                              e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                            }
+                          })}
                           className={`w-full bg-zinc-50 border rounded-xl py-3.5 pl-10 pr-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                             errors.phone ? "border-red-500" : "border-zinc-300"
                           }`}

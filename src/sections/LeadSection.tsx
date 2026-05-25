@@ -9,13 +9,14 @@ import { useToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, Sparkles, ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 
 // Zod Schema
 const inquirySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits").max(12, "Phone number cannot exceed 12 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   center: z.string().min(1, "Please select a training center"),
 });
 
@@ -27,6 +28,7 @@ interface LeadSectionProps {
 
 export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
   const { toast } = useToast();
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const {
@@ -46,8 +48,23 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
 
   const onSubmit = async (data: InquiryFormValues) => {
     setIsSubmitting(true);
-    // Simulate API request
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          center: data.center,
+          formType: "Lead Section Form",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to shoot email lead:", err);
+    }
+
     setIsSubmitting(false);
 
     toast(
@@ -60,6 +77,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
       phone: "",
       center: "Noida",
     });
+    router.push("/thank-you");
   };
 
   return (
@@ -204,7 +222,12 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                       id="phone"
                       type="tel"
                       placeholder="98765 43210"
-                      {...register("phone")}
+                      maxLength={10}
+                      {...register("phone", {
+                        onChange: (e) => {
+                          e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                        }
+                      })}
                       disabled={isSubmitting}
                       className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all ${
                         errors.phone ? "border-red-500" : "border-zinc-300 focus:border-brand-red"

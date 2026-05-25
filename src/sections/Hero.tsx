@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export const Hero = () => {
   return (
-    <section className="relative w-full bg-white pt-[68px] sm:pt-[76px] pb-20 overflow-hidden">
+    <section className="relative w-full bg-white pt-[115px] sm:pt-[135px] pb-20 overflow-hidden">
       
       {/* Subtle background gradient mesh */}
       <div className="absolute inset-0 bg-gradient-hero pointer-events-none" />

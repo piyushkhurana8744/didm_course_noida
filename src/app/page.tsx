@@ -32,6 +32,7 @@ import { useToast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 import { ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
 import { CENTERS } from "@/data/content";
 
@@ -39,7 +40,7 @@ import { CENTERS } from "@/data/content";
 const modalSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   center: z.string().min(1, "Please select a center near you"),
 });
 
@@ -47,6 +48,7 @@ type ModalFormValues = z.infer<typeof modalSchema>;
 
 export default function Home() {
   const { toast } = useToast();
+  const router = useRouter();
   
   // Dialog visibility states
   const [isDemoOpen, setIsDemoOpen] = React.useState(false);
@@ -81,7 +83,23 @@ export default function Home() {
 
   const handleDemoSubmit = async (data: ModalFormValues) => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          center: data.center,
+          formType: "Free Demo Class Modal Form",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to shoot email lead:", err);
+    }
+
     setIsSubmitting(false);
     setIsDemoOpen(false);
     
@@ -92,6 +110,7 @@ export default function Home() {
       phone: "",
       center: "Noida",
     });
+    router.push("/thank-you");
   };
 
   const handleBrochureSubmit = async (e: React.FormEvent) => {
@@ -107,14 +126,43 @@ export default function Home() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (typeof email !== "string" || !emailRegex.test(email)) {
+      toast("Please enter a valid email address.", "error");
+      return;
+    }
+
+    const phoneRegex = /^\d{10}$/;
+    if (typeof phone !== "string" || !phoneRegex.test(phone)) {
+      toast("Phone number must be exactly 10 digits containing only numbers.", "error");
+      return;
+    }
+
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          center,
+          formType: "Brochure Download Form",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to shoot email lead:", err);
+    }
+
     setIsSubmitting(false);
     setIsBrochureOpen(false);
     
     toast(`Syllabus brochure generated for ${center} center! Download starting automatically for ${email}.`, "success");
     // Trigger mock file download
     window.open("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "_blank");
+    router.push("/thank-you");
   };
 
   return (
@@ -127,17 +175,26 @@ export default function Home() {
         {/* 1. Hero Section */}
         <Hero />
 
+        {/* 7c. Let Your Digital Career Begins Now - CTA Cards */}
+        <DigitalCareerStart onOpenDemo={triggerDemoModal} />
+
+        {/* 7. Detailed Course comparison grid */}
+        <ComparisonTable onOpenDemo={triggerDemoModal} />
+
         {/* 2. Program Highlights */}
         <ProgramHighlights />
+
+        {/* 3c. Course learning pathways (MIDM, Advanced, Customized) */}
+        <CoursePrograms onOpenDemo={triggerDemoModal} />
 
         {/* 3. Video & Counselling Form */}
         <VideoCounselling />
 
+        {/* 7b. Noida Student Feedback Grid */}
+        <StudentFeedback />
+
         {/* 3b. Course Overview details */}
         <CourseOverview />
-
-        {/* 3c. Course learning pathways (MIDM, Advanced, Customized) */}
-        <CoursePrograms onOpenDemo={triggerDemoModal} />
 
         {/* 3d. Training schedule and qualifications (Noida) */}
         <TrainingSchedule onOpenDemo={triggerDemoModal} />
@@ -148,20 +205,11 @@ export default function Home() {
         {/* 3f. Interactive module details tabs (Adwords, SEO, SMM, Adsense, etc.) */}
         <CoveredModulesTabs onOpenDemo={triggerDemoModal} />
 
-        {/* 7. Detailed Course comparison grid */}
-        <ComparisonTable onOpenDemo={triggerDemoModal} />
-
-        {/* 7b. Noida Student Feedback Grid */}
-        <StudentFeedback />
-
         {/* 7a. Noida Branch Students Corner Carousel */}
         <StudentsCorner />
 
         {/* 7b. Students Happy Faces Gallery */}
         <StudentsHappyFaces />
-
-        {/* 7c. Let Your Digital Career Begins Now - CTA Cards */}
-        <DigitalCareerStart onOpenDemo={triggerDemoModal} />
 
         {/* 12. FAQ Accordions */}
         <FAQ />
@@ -226,7 +274,12 @@ export default function Home() {
             <input
               type="tel"
               placeholder="98765 43210"
-              {...register("phone")}
+              maxLength={10}
+              {...register("phone", {
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                }
+              })}
               disabled={isSubmitting}
               className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                 errors.phone ? "border-red-500" : "border-zinc-300"
@@ -319,6 +372,11 @@ export default function Home() {
               name="brochure-phone"
               type="tel"
               required
+              maxLength={10}
+              onInput={(e) => {
+                const target = e.target as HTMLInputElement;
+                target.value = target.value.replace(/\D/g, "").slice(0, 10);
+              }}
               placeholder="98765 43210"
               disabled={isSubmitting}
               className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
