@@ -49,6 +49,8 @@ export const Footer = () => {
                 <img
                   src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_150/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
+                  width={150}
+                  height={48}
                   className="h-8 sm:h-9 w-auto object-contain"
                 />
               </div>

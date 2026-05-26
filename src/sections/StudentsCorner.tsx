@@ -128,6 +128,8 @@ export const StudentsCorner = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: direction === "next" ? -80 : 80 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30, duration: 0.3 }}
+                  width={600}
+                  height={375}
                   className="w-full h-full object-cover absolute inset-0"
                   alt={`Noida Student Carousel Slide ${activeIndex + 1}`}
                 />

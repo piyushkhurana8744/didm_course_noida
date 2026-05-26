@@ -65,6 +65,8 @@ export const StudentFeedback = () => {
               <img
                 src={image.src}
                 alt={image.alt}
+                width={400}
+                height={300}
                 className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
@@ -139,6 +141,8 @@ export const StudentFeedback = () => {
                       <img
                         src={image.src}
                         alt={image.alt}
+                        width={400}
+                        height={300}
                         className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
@@ -187,6 +191,8 @@ export const StudentFeedback = () => {
               <img
                 src={selectedImage}
                 alt="Selected Feedback Zoom"
+                width={800}
+                height={600}
                 className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg"
               />
             </motion.div>

@@ -63,6 +63,8 @@ export const StudentsHappyFaces = () => {
               <img
                 src={face.src}
                 alt={face.alt}
+                width={400}
+                height={300}
                 className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
@@ -135,6 +137,8 @@ export const StudentsHappyFaces = () => {
                       <img
                         src={face.src}
                         alt={face.alt}
+                        width={400}
+                        height={300}
                         className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
@@ -180,6 +184,8 @@ export const StudentsHappyFaces = () => {
               <img
                 src={selectedImage}
                 alt="Happy Face Zoom"
+                width={800}
+                height={600}
                 className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-lg"
               />
             </motion.div>

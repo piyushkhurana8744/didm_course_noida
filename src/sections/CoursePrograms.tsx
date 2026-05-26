@@ -99,6 +99,8 @@ export const CoursePrograms = ({ onOpenDemo }: CourseProgramsProps) => {
                   <img
                     src={prog.image}
                     alt={prog.title}
+                    width={500}
+                    height={312}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />

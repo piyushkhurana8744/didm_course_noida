@@ -109,6 +109,8 @@ export const VideoCounselling = () => {
                       <img
                         src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780066/youtube-thumbnail1_eijn6u.webp"
                         alt="DIDM Student Reviews"
+                        width={600}
+                        height={338}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                       />
                       

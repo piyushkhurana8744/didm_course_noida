@@ -66,6 +66,8 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
                 <img
                   src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_250/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
+                  width={250}
+                  height={80}
                   className="h-13 sm:h-15 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
                 />
               </a>
@@ -76,6 +78,8 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
               <img
                 src="/msme logo.png"
                 alt="MSME Logo"
+                width={120}
+                height={40}
                 className="h-8 sm:h-10 md:h-11 w-auto object-contain hidden xs:block"
               />
             </div>
@@ -121,6 +125,8 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
               <img
                 src="/msme logo.png"
                 alt="MSME Logo"
+                width={80}
+                height={28}
                 className="h-7 w-auto object-contain xs:hidden mr-2"
               />
               <button
