@@ -177,7 +177,7 @@ export const Hero = () => {
       <div className="w-full relative">
         <div className="relative overflow-hidden w-full">
           <img
-            src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1200/v1779780068/hero-banner_p0nzip.webp"
+            src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1920/v1779780068/hero-banner_p0nzip.webp"
             alt="DIDM Noida Branch Banner"
             width={1200}
             height={675}

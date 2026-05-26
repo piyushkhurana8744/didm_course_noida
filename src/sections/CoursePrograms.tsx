@@ -15,7 +15,7 @@ export const CoursePrograms = ({ onOpenDemo }: CourseProgramsProps) => {
     {
       id: "midm",
       title: "Master in Digital Marketing (MIDM)",
-      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780068/midm-program_kxiznq.jpg",
+      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_800/v1779780068/midm-program_kxiznq.jpg",
       desc: "Unique type of digital marketing training program designed to suit all market needs. This training program includes three training formats combined into a single course enrollment fee.",
       bullets1: [
         "In-Class Training Program (140hrs sessions)",
@@ -33,7 +33,7 @@ export const CoursePrograms = ({ onOpenDemo }: CourseProgramsProps) => {
     {
       id: "advanced",
       title: "Advanced in Digital Marketing",
-      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780055/advanced-program_scdx6v.jpg",
+      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_800/v1779780055/advanced-program_scdx6v.jpg",
       desc: "DIDM Noida offers the Advanced Internet Marketing Training Program (AIMTP). Master core concepts of digital marketing covering all vital industry modules, conducted in both Online and In-Class sessions.",
       bullets1: [
         "50+ Modules & Complete Practical Sessions",
@@ -51,7 +51,7 @@ export const CoursePrograms = ({ onOpenDemo }: CourseProgramsProps) => {
     {
       id: "customized",
       title: "Customized in Digital Marketing",
-      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780059/customized-program_hiug7z.jpg",
+      image: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_800/v1779780059/customized-program_hiug7z.jpg",
       desc: "DIDM Noida offers customized digital marketing sessions aligned with individual needs or market demand. Select specific modules according to your strategic career or business objectives.",
       bullets1: [
         "Customized Training Modules & Flexible Hours",

@@ -5,24 +5,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn, Eye } from "lucide-react";
 
 const HAPPY_FACES = [
-  { id: 1, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780069/happy_face_3_bwaaak.png", alt: "Happy Graduate 1" },
-  { id: 2, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780069/happy_face_6_zj3jdm.png", alt: "Happy Graduate 2" },
-  { id: 3, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780068/happy_face_7_elbigt.webp", alt: "Happy Graduate 3" },
-  { id: 4, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780067/happy_face_5_uwbeuv.png", alt: "Happy Graduate 4" },
-  { id: 5, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780067/happy_face_4_imznep.png", alt: "Happy Graduate 5" },
-  { id: 6, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780067/carousel_1_amts2r.jpg", alt: "Happy Graduate 6" },
-  { id: 7, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780066/happy_face_2_yw8jgy.png", alt: "Happy Graduate 7" },
-  { id: 8, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780066/happy_face_1_mrwfoa.png", alt: "Happy Graduate 8" },
+  { id: 1, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780069/happy_face_3_bwaaak.png", alt: "Happy Graduate 1" },
+  { id: 2, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780069/happy_face_6_zj3jdm.png", alt: "Happy Graduate 2" },
+  { id: 3, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780068/happy_face_7_elbigt.webp", alt: "Happy Graduate 3" },
+  { id: 4, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/happy_face_5_uwbeuv.png", alt: "Happy Graduate 4" },
+  { id: 5, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/happy_face_4_imznep.png", alt: "Happy Graduate 5" },
+  { id: 6, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/carousel_1_amts2r.jpg", alt: "Happy Graduate 6" },
+  { id: 7, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780066/happy_face_2_yw8jgy.png", alt: "Happy Graduate 7" },
+  { id: 8, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780066/happy_face_1_mrwfoa.png", alt: "Happy Graduate 8" },
 ];
 
 const ADDITIONAL_FACES = [
-  { id: 9, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780063/carousel_7_cmnsyo.jpg", alt: "Campus life 1" },
-  { id: 10, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780063/carousel_6_bzzwgo.jpg", alt: "Campus life 2" },
-  { id: 11, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780057/carousel_8_pbze7d.jpg", alt: "Campus life 3" },
-  { id: 12, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780053/carousel_3_hravhg.jpg", alt: "Campus life 5" },
-  { id: 13, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780051/carousel_5_w8ffnj.jpg", alt: "Campus life 6" },
-  { id: 14, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780053/carousel_2_vytr7u.jpg", alt: "Campus life 7" },
-  { id: 15, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780067/carousel_1_amts2r.jpg", alt: "Campus life 8" },
+  { id: 9, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_7_cmnsyo.jpg", alt: "Campus life 1" },
+  { id: 10, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_6_bzzwgo.jpg", alt: "Campus life 2" },
+  { id: 11, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780057/carousel_8_pbze7d.jpg", alt: "Campus life 3" },
+  { id: 12, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_3_hravhg.jpg", alt: "Campus life 5" },
+  { id: 13, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780051/carousel_5_w8ffnj.jpg", alt: "Campus life 6" },
+  { id: 14, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_2_vytr7u.jpg", alt: "Campus life 7" },
+  { id: 15, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/carousel_1_amts2r.jpg", alt: "Campus life 8" },
 ];
 
 const ALL_FACES = [...HAPPY_FACES, ...ADDITIONAL_FACES];
@@ -61,7 +61,7 @@ export const StudentsHappyFaces = () => {
               className="group relative border border-zinc-200 rounded-2xl overflow-hidden bg-white shadow-2xs hover:shadow-md cursor-pointer transition-all duration-300 flex aspect-[4/3] items-center justify-center"
             >
               <img
-                src={face.src}
+                src={face.src.replace('/upload/', '/upload/f_auto,q_auto,w_400/')}
                 alt={face.alt}
                 width={400}
                 height={300}
@@ -135,7 +135,7 @@ export const StudentsHappyFaces = () => {
                       className="group relative border border-zinc-200 rounded-2xl overflow-hidden bg-white shadow-2xs hover:shadow-lg cursor-pointer transition-all duration-300 flex aspect-[4/3] items-center justify-center"
                     >
                       <img
-                        src={face.src}
+                        src={face.src.replace('/upload/', '/upload/f_auto,q_auto,w_400/')}
                         alt={face.alt}
                         width={400}
                         height={300}
@@ -182,7 +182,7 @@ export const StudentsHappyFaces = () => {
               className="relative max-w-5xl w-full max-h-[85vh] sm:max-h-[90vh] bg-white rounded-2xl overflow-hidden border border-zinc-700 shadow-2xl z-10 p-2 flex items-center justify-center"
             >
               <img
-                src={selectedImage}
+                src={selectedImage.replace('/upload/', '/upload/f_auto,q_auto,w_1200/')}
                 alt="Happy Face Zoom"
                 width={800}
                 height={600}

@@ -5,13 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 
 const CAROUSEL_IMAGES = [
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780063/carousel_7_cmnsyo.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780063/carousel_6_bzzwgo.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780057/carousel_8_pbze7d.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780053/carousel_3_hravhg.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780051/carousel_5_w8ffnj.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780053/carousel_2_vytr7u.jpg",
-  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780067/carousel_1_amts2r.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780063/carousel_7_cmnsyo.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780063/carousel_6_bzzwgo.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780057/carousel_8_pbze7d.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780053/carousel_3_hravhg.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780051/carousel_5_w8ffnj.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780053/carousel_2_vytr7u.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780067/carousel_1_amts2r.jpg",
 ];
 
 export const StudentsCorner = () => {
@@ -128,8 +128,8 @@ export const StudentsCorner = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: direction === "next" ? -80 : 80 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30, duration: 0.3 }}
-                  width={600}
-                  height={375}
+                  width={1000}
+                  height={625}
                   className="w-full h-full object-cover absolute inset-0"
                   alt={`Noida Student Carousel Slide ${activeIndex + 1}`}
                 />

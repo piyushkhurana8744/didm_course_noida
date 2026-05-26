@@ -45,9 +45,9 @@ export const Footer = () => {
           {/* Logo & Bio Column */}
           <div className="lg:col-span-4 flex flex-col gap-5">
             <div className="flex items-center gap-2">
-              <div className="bg-white px-3 py-1.5 rounded-xl flex items-center justify-center">
+              <div className="bg-white/10 backdrop-blur-md border border-white/25 px-3 py-1.5 rounded-xl flex items-center justify-center">
                 <img
-                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_150/v1779780063/didm-logo-reg_gaianm.png"
+                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_300/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
                   width={150}
                   height={48}

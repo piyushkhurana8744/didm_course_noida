@@ -107,7 +107,7 @@ export const VideoCounselling = () => {
                     >
                       {/* Full-bleed Thumbnail Image (Perfect 16:9 fit) */}
                       <img
-                        src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_600/v1779780066/youtube-thumbnail1_eijn6u.webp"
+                        src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1000/v1779780066/youtube-thumbnail1_eijn6u.webp"
                         alt="DIDM Student Reviews"
                         width={600}
                         height={338}

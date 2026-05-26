@@ -64,7 +64,7 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
                 className="flex items-center group cursor-pointer focus:outline-none"
               >
                 <img
-                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_250/v1779780063/didm-logo-reg_gaianm.png"
+                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_400/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
                   width={250}
                   height={80}
