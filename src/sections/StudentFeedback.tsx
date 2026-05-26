@@ -5,19 +5,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Eye, X, ZoomIn } from "lucide-react";
 
 const FEEDBACK_IMAGES = [
-  { id: 1, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780065/student-1_feedback_igxhz7.jpg", alt: "Noida Student Feedback Form 1" },
-  { id: 2, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780064/student_13_feedback_nwhx8q.jpg", alt: "Noida Student Feedback Form 2" },
-  { id: 3, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780064/student_12_feedback_xqqsk7.jpg", alt: "Noida Student Feedback Form 3" },
-  { id: 4, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/student_11_feedback_oxvbkv.jpg", alt: "Noida Student Feedback Form 4" },
-  { id: 5, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/student_10_feedback_nvnwol.jpg", alt: "Noida Student Feedback Form 5" },
-  { id: 6, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780062/student_9_feedback_q00xpt.jpg", alt: "Noida Student Feedback Form 6" },
-  { id: 7, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780061/student_8_feedback_amqjkk.jpg", alt: "Noida Student Feedback Form 7" },
-  { id: 8, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780059/student_7_feedback_aoux5z.jpg", alt: "Noida Student Feedback Form 8" },
-  { id: 9, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780058/student_6_feedback_ux44b5.jpg", alt: "Noida Student Feedback Form 9" },
-  { id: 10, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780056/student_5_feedback_iiglry.jpg", alt: "Noida Student Feedback Form 10" },
-  { id: 11, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780055/student_4_feedback_fvmho8.jpg", alt: "Noida Student Feedback Form 11" },
-  { id: 12, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780054/student_3_feedback_wsggbf.jpg", alt: "Noida Student Feedback Form 12" },
-]
+  { id: 1, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780065/student-1_feedback_igxhz7.jpg", alt: "Noida Student Feedback Form 1" },
+  { id: 2, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780064/student_13_feedback_nwhx8q.jpg", alt: "Noida Student Feedback Form 2" },
+  { id: 3, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780064/student_12_feedback_xqqsk7.jpg", alt: "Noida Student Feedback Form 3" },
+  { id: 4, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780063/student_11_feedback_oxvbkv.jpg", alt: "Noida Student Feedback Form 4" },
+  { id: 5, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780063/student_10_feedback_nvnwol.jpg", alt: "Noida Student Feedback Form 5" },
+  { id: 6, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780062/student_9_feedback_q00xpt.jpg", alt: "Noida Student Feedback Form 6" },
+  { id: 7, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780061/student_8_feedback_amqjkk.jpg", alt: "Noida Student Feedback Form 7" },
+  { id: 8, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780059/student_7_feedback_aoux5z.jpg", alt: "Noida Student Feedback Form 8" },
+  { id: 9, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780058/student_6_feedback_ux44b5.jpg", alt: "Noida Student Feedback Form 9" },
+  { id: 10, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780056/student_5_feedback_iiglry.jpg", alt: "Noida Student Feedback Form 10" },
+  { id: 11, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780055/student_4_feedback_fvmho8.jpg", alt: "Noida Student Feedback Form 11" },
+  { id: 12, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_500/v1779780054/student_3_feedback_wsggbf.jpg", alt: "Noida Student Feedback Form 12" },
+];
 
 export const StudentFeedback = () => {
   const [isGridModalOpen, setIsGridModalOpen] = React.useState(false);
