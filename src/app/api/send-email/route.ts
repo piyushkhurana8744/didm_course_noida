@@ -19,8 +19,8 @@ export async function POST(request: Request) {
     const smtpPort = parseInt(process.env.SMTP_PORT || "587", 10);
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
-    const smtpFrom = process.env.SMTP_FROM || `"DIDM Noida Leads" <leads@didm.in>`;
-    const smtpTo = process.env.SMTP_TO || "info@didm.in"; // destination email
+    const smtpFrom = process.env.SMTP_FROM || process.env.EMAIL_FROM || `"DIDM Noida Leads" <leads@didm.in>`;
+    const smtpTo = process.env.SMTP_TO || process.env.ADMIN_EMAIL || "info@didm.in"; // destination email
 
     if (!smtpUser || !smtpPass) {
       console.warn("SMTP credentials (SMTP_USER or SMTP_PASS) not configured. Email NOT sent. Lead details:", body);

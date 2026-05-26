@@ -76,7 +76,7 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
               <div className="h-8 sm:h-9 w-px bg-zinc-300 mx-4 hidden xs:block" />
               
               <img
-                src="/msme logo.png"
+                src="https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780068/msme_logo_1_ylyjdr.png"
                 alt="MSME Logo"
                 width={120}
                 height={40}
@@ -123,7 +123,7 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
             <div className="flex items-center gap-2 lg:hidden">
               {/* MSME logo shown on mobile next to menu if screen is small */}
               <img
-                src="/msme logo.png"
+                src="https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780068/msme_logo_1_ylyjdr.png"
                 alt="MSME Logo"
                 width={80}
                 height={28}
