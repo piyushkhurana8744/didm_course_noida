@@ -137,7 +137,7 @@ export const CoveredModulesTabs = ({ onOpenDemo }: CoveredModulesTabsProps) => {
   const currentModule = modules.find((m) => m.id === activeTab) || modules[0];
 
   return (
-    <section className="py-20 bg-white border-b border-zinc-200">
+    <section id="curriculum" className="py-20 bg-white border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}

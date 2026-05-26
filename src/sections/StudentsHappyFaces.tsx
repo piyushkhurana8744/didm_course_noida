@@ -5,24 +5,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ZoomIn, Eye } from "lucide-react";
 
 const HAPPY_FACES = [
-  { id: 1, src: "/happy_face_1.png", alt: "Happy Graduate 1" },
-  { id: 2, src: "/happy_face_2.png", alt: "Happy Graduate 2" },
-  { id: 3, src: "/happy_face_3.png", alt: "Happy Graduate 3" },
-  { id: 4, src: "/happy_face_4.png", alt: "Happy Graduate 4" },
-  { id: 5, src: "/happy_face_5.png", alt: "Happy Graduate 5" },
-  { id: 6, src: "/happy_face_6.png", alt: "Happy Graduate 6" },
-  { id: 7, src: "/happy_face_7.webp", alt: "Happy Graduate 7" },
-  { id: 8, src: "/happy_face_8.webp", alt: "Happy Graduate 8" },
+  { id: 1, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780069/happy_face_3_bwaaak.png", alt: "Happy Graduate 1" },
+  { id: 2, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780069/happy_face_6_zj3jdm.png", alt: "Happy Graduate 2" },
+  { id: 3, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780068/happy_face_7_elbigt.webp", alt: "Happy Graduate 3" },
+  { id: 4, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/happy_face_5_uwbeuv.png", alt: "Happy Graduate 4" },
+  { id: 5, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/happy_face_4_imznep.png", alt: "Happy Graduate 5" },
+  { id: 6, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/carousel_1_amts2r.jpg", alt: "Happy Graduate 6" },
+  { id: 7, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780066/happy_face_2_yw8jgy.png", alt: "Happy Graduate 7" },
+  { id: 8, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780066/happy_face_1_mrwfoa.png", alt: "Happy Graduate 8" },
 ];
 
 const ADDITIONAL_FACES = [
-  { id: 9, src: "/carousel_1.jpeg", alt: "Campus life 1" },
-  { id: 10, src: "/carousel_2.jpg", alt: "Campus life 2" },
-  { id: 11, src: "/carousel_3.jpg", alt: "Campus life 3" },
-  { id: 12, src: "/carousel_5.jpg", alt: "Campus life 5" },
-  { id: 13, src: "/carousel_6.jpg", alt: "Campus life 6" },
-  { id: 14, src: "/carousel_7.jpeg", alt: "Campus life 7" },
-  { id: 15, src: "/carousel_8.jpeg", alt: "Campus life 8" },
+  { id: 9, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_7_cmnsyo.jpg", alt: "Campus life 1" },
+  { id: 10, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_6_bzzwgo.jpg", alt: "Campus life 2" },
+  { id: 11, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780057/carousel_8_pbze7d.jpg", alt: "Campus life 3" },
+  { id: 12, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_3_hravhg.jpg", alt: "Campus life 5" },
+  { id: 13, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780051/carousel_5_w8ffnj.jpg", alt: "Campus life 6" },
+  { id: 14, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_2_vytr7u.jpg", alt: "Campus life 7" },
+  { id: 15, src: "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/carousel_1_amts2r.jpg", alt: "Campus life 8" },
 ];
 
 const ALL_FACES = [...HAPPY_FACES, ...ADDITIONAL_FACES];
@@ -43,7 +43,7 @@ export const StudentsHappyFaces = () => {
   }, [selectedImage, isModalOpen]);
 
   return (
-    <section className="py-16 bg-white border-b border-zinc-200">
+    <section id="placements" className="py-16 bg-white border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Title */}

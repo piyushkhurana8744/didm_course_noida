@@ -11,11 +11,7 @@ import { TrainingSchedule } from "@/sections/TrainingSchedule";
 import { CoveredModules } from "@/sections/CoveredModules";
 import { CoveredModulesTabs } from "@/sections/CoveredModulesTabs";
 import { WhyChooseUs } from "@/sections/WhyChooseUs";
-import { Curriculum } from "@/sections/Curriculum";
 import { ComparisonTable } from "@/sections/ComparisonTable";
-import { Pricing } from "@/sections/Pricing";
-import { Testimonials } from "@/sections/Testimonials";
-import { Placement } from "@/sections/Placement";
 import { ReasonsToJoin } from "@/sections/ReasonsToJoin";
 import { Gallery } from "@/sections/Gallery";
 import { FAQ } from "@/sections/FAQ";
@@ -213,6 +209,8 @@ export default function Home() {
 
         {/* 3f. Interactive module details tabs (Adwords, SEO, SMM, Adsense, etc.) */}
         <CoveredModulesTabs onOpenDemo={triggerDemoModal} />
+
+
 
         {/* 7a. Noida Branch Students Corner Carousel */}
         <StudentsCorner />

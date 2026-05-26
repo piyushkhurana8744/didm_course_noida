@@ -85,7 +85,7 @@ export const ComparisonTable = ({ onOpenDemo }: ComparisonTableProps) => {
   ];
 
   return (
-    <section className="py-20 bg-white border-b border-zinc-200">
+    <section id="pricing" className="py-20 bg-white border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}

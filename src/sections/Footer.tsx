@@ -47,7 +47,7 @@ export const Footer = () => {
             <div className="flex items-center gap-2">
               <div className="bg-white px-3 py-1.5 rounded-xl flex items-center justify-center">
                 <img
-                  src="/didm-logo-reg.png"
+                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
                   className="h-8 sm:h-9 w-auto object-contain"
                 />

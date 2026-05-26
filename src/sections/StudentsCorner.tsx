@@ -5,13 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 
 const CAROUSEL_IMAGES = [
-  "/carousel_1.jpeg",
-  "/carousel_2.jpg",
-  "/carousel_3.jpg",
-  "/carousel_5.jpg",
-  "/carousel_6.jpg",
-  "/carousel_7.jpeg",
-  "/carousel_8.jpeg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_7_cmnsyo.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/carousel_6_bzzwgo.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780057/carousel_8_pbze7d.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_3_hravhg.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780051/carousel_5_w8ffnj.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780053/carousel_2_vytr7u.jpg",
+  "https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780067/carousel_1_amts2r.jpg",
 ];
 
 export const StudentsCorner = () => {

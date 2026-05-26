@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu, X, CalendarRange } from "lucide-react";
+import { Menu, X, CalendarRange, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScroll } from "@/hooks/useScroll";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,7 +20,6 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
     { label: "Curriculum", href: "#curriculum" },
     { label: "Pricing", href: "#pricing" },
     { label: "Placements", href: "#placements" },
-    { label: "Reviews", href: "#reviews" },
     { label: "FAQ", href: "#faq" },
   ];
 
@@ -65,9 +64,9 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
                 className="flex items-center group cursor-pointer focus:outline-none"
               >
                 <img
-                  src="/didm-logo-reg.png"
+                  src="https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780063/didm-logo-reg_gaianm.png"
                   alt="DIDM Logo"
-                  className="h-11 sm:h-13 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
+                  className="h-13 sm:h-15 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
                 />
               </a>
 
@@ -82,26 +81,33 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
             </div>
 
             {/* Desktop Nav Links */}
-            <nav className="hidden lg:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center gap-2">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="text-zinc-650 hover:text-brand-red text-sm font-semibold transition-colors duration-200 relative group py-2"
+                  className="text-zinc-800 hover:text-brand-red hover:bg-zinc-50 text-[13px] sm:text-sm font-bold tracking-wide px-3 py-2 rounded-xl transition-all duration-300 relative group"
                 >
                   {link.label}
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-red transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute bottom-1 left-3 right-3 h-[2px] bg-brand-red scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
                 </a>
               ))}
             </nav>
 
             {/* Desktop CTA Buttons */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-5">
+              <a
+                href="tel:+918447222054"
+                className="flex items-center gap-2 text-zinc-800 hover:text-brand-red transition-all duration-300 font-extrabold text-sm border-r border-zinc-200 pr-5"
+              >
+                <Phone className="h-4 w-4 text-brand-red animate-pulse" />
+                <span>84472 22054</span>
+              </a>
               <Button
                 variant="primary"
-                size="sm"
-                className="flex items-center gap-2 shadow-md shadow-brand-red/10"
+                size="md"
+                className="flex items-center gap-2 shadow-md shadow-brand-red/15 py-3 px-5 text-sm"
                 onClick={onOpenDemo}
               >
                 <CalendarRange className="h-4 w-4" />

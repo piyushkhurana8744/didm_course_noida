@@ -177,7 +177,7 @@ export const Hero = () => {
       <div className="w-full relative">
         <div className="relative overflow-hidden w-full">
           <img
-            src="/hero-banner.png"
+            src="https://res.cloudinary.com/dnfz4jwam/image/upload/v1779780068/hero-banner_p0nzip.webp"
             alt="DIDM Noida Branch Banner"
             className="w-full h-auto block"
           />
@@ -189,7 +189,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden md:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[300px] lg:w-[330px] z-20"
+            className="hidden md:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[260px] lg:w-[290px] z-20"
           >
             {renderForm()}
           </motion.div>
