@@ -71,7 +71,7 @@ export const Hero = () => {
   const onDesktopSubmit = createSubmitHandler(desktopForm.reset);
   const onMobileSubmit = createSubmitHandler(mobileForm.reset);
 
-  const inputBase = "w-full border rounded-lg py-2.5 pl-9 pr-3 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/25 focus:border-brand-red transition-all";
+  const inputBase = "w-full border rounded-lg py-2 pl-9 pr-3 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/25 focus:border-brand-red transition-all";
 
   const renderForm = (
     formInstance: typeof desktopForm,
@@ -84,22 +84,21 @@ export const Hero = () => {
     } = formInstance;
 
     return (
-      <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+      <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-white/25">
         {/* Branded Red Header */}
-        <div className="bg-gradient-to-r from-brand-red via-red-600 to-red-700 px-5 py-4 text-white">
-          <div className="flex items-center gap-2 mb-0.5">
-            <GraduationCap className="h-5 w-5" />
-            <span className="text-[10px] font-bold uppercase tracking-widest opacity-90">Free Demo Class</span>
-          </div>
-          <h3 className="text-base sm:text-lg font-extrabold tracking-tight leading-tight">
-            Book Your Seat Now!
+        <div className="bg-gradient-to-r from-brand-red/85 via-red-600/85 to-red-700/85 backdrop-blur-md px-4 py-2.5 text-white flex items-center justify-between">
+          <h3 className="text-[12px] font-extrabold tracking-tight uppercase flex items-center gap-1.5">
+            <GraduationCap className="h-4.5 w-4.5 shrink-0 text-white" />
+            Book Free Demo
           </h3>
-          <p className="text-[10px] mt-1 opacity-80 font-medium">Limited batch slots available for Noida campus</p>
+          <span className="text-[9px] bg-white/25 px-2 py-0.5 rounded font-black tracking-wide uppercase">
+            Noida
+          </span>
         </div>
 
         {/* Form Body */}
-        <div className="bg-white/90 backdrop-blur-xl p-5">
-          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-3">
+        <div className="bg-white/75 backdrop-blur-md p-4">
+          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-2.5">
             {/* Full Name */}
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
@@ -111,7 +110,7 @@ export const Hero = () => {
                 className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
               />
             </div>
-            {errors.name && <p className="text-[10px] text-red-500 font-semibold -mt-1.5 pl-1">{errors.name.message}</p>}
+            {errors.name && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.name.message}</p>}
 
             {/* Email Address */}
             <div className="relative">
@@ -124,7 +123,7 @@ export const Hero = () => {
                 className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
               />
             </div>
-            {errors.email && <p className="text-[10px] text-red-500 font-semibold -mt-1.5 pl-1">{errors.email.message}</p>}
+            {errors.email && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.email.message}</p>}
 
             {/* Contact Number */}
             <div className="relative">
@@ -142,7 +141,7 @@ export const Hero = () => {
                 className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
               />
             </div>
-            {errors.phone && <p className="text-[10px] text-red-500 font-semibold -mt-1.5 pl-1">{errors.phone.message}</p>}
+            {errors.phone && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.phone.message}</p>}
 
             {/* Choose Center */}
             <div className="relative">
@@ -158,13 +157,13 @@ export const Hero = () => {
                 ))}
               </select>
             </div>
-            {errors.center && <p className="text-[10px] text-red-500 font-semibold -mt-1.5 pl-1">{errors.center.message}</p>}
+            {errors.center && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.center.message}</p>}
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-brand-red to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-lg font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+              className="w-full bg-gradient-to-r from-brand-red to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 rounded-lg font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
@@ -203,14 +202,14 @@ export const Hero = () => {
             className="w-full h-auto block"
           />
           {/* Right-side gradient for form readability */}
-          <div className="absolute inset-0 bg-gradient-to-l from-black/20 via-transparent to-transparent pointer-events-none hidden md:block" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/20 via-transparent to-transparent pointer-events-none hidden lg:block" />
 
           {/* Desktop Overlay Form - positioned on right side */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden md:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[260px] lg:w-[290px] z-20"
+            className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[250px] lg:w-[280px] z-20"
           >
             {renderForm(desktopForm, onDesktopSubmit)}
           </motion.div>
@@ -218,7 +217,7 @@ export const Hero = () => {
       </div>
 
       {/* Mobile Form Display (Stacked Below Banner) */}
-      <div className="block md:hidden px-4 -mt-8 max-w-md mx-auto relative z-10">
+      <div className="block lg:hidden px-4 -mt-8 max-w-md mx-auto relative z-10">
         {renderForm(mobileForm, onMobileSubmit)}
       </div>
 

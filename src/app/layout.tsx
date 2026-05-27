@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
   description: "Learn Advanced Digital Marketing in Noida. Master SEO, Google Ads, Meta Ads, AI Tools & Automations. 100% Placements & Guaranteed Paid Internship.",
   metadataBase: new URL("https://noidadigital.in"),
+  icons: {
+    icon: "/didmfavicon.png",
+  },
   alternates: {
     canonical: "/",
   },
@@ -68,7 +71,7 @@ export default function RootLayout({
     "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
     "@id": "https://noidadigital.in/#academy",
     "url": "https://noidadigital.in",
-    "telephone": "+919876543210",
+    "telephone": "+918447222054",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "A-40, 4th Floor",

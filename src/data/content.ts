@@ -578,21 +578,6 @@ export const FAQ_DATA: FAQItem[] = [
 ];
 
 export const CENTERS = [
-  "Dwarka",
-  "Gurgaon",
-  "Kalkaji",
-  "Noida",
-  "Preet Vihar",
-  "Rajouri Garden",
-  "Satya Niketan",
-  "Pitampura",
-  "South Ex",
-  "Dehradun",
-  "Haldwani",
-  "Mumbai",
-  "Meerut",
-  "Jaipur",
-  "Varanasi",
-  "Online"
+  "Noida"
 ];
 

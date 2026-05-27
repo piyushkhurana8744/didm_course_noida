@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 
 interface ComparisonTableProps {
   onOpenDemo?: (courseName: string) => void;
+  showPricing?: boolean;
 }
 
-export const ComparisonTable = ({ onOpenDemo }: ComparisonTableProps) => {
+export const ComparisonTable = ({ onOpenDemo, showPricing = true }: ComparisonTableProps) => {
   const courses = [
     {
       title: "ADVANCED COURSE",
@@ -116,11 +117,13 @@ export const ComparisonTable = ({ onOpenDemo }: ComparisonTableProps) => {
                 </div>
 
                 {/* Price Display */}
-                <div className="py-8 text-center border-b border-zinc-100 bg-zinc-50/20">
-                  <span className="text-3xl sm:text-4xl font-black text-zinc-850 tracking-tight">
-                    {course.price}
-                  </span>
-                </div>
+                {showPricing && (
+                  <div className="py-8 text-center border-b border-zinc-100 bg-zinc-50/20">
+                    <span className="text-3xl sm:text-4xl font-black text-zinc-850 tracking-tight">
+                      {course.price}
+                    </span>
+                  </div>
+                )}
 
                 {/* Features List */}
                 <div className="divide-y divide-zinc-100">
