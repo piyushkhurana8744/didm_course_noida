@@ -53,7 +53,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     if (path.endsWith("/highlights")) targetId = "highlights";
     else if (path.endsWith("/curriculum")) targetId = "curriculum";
     else if (path.endsWith("/pricing") || path.endsWith("/courses")) targetId = "pricing";
-    else if (path.endsWith("/placements")) targetId = "placements";
+    else if (path.endsWith("/placements") || path.endsWith("/testimonials")) targetId = "placements";
     else if (path.endsWith("/faq")) targetId = "faq";
 
     if (targetId) {

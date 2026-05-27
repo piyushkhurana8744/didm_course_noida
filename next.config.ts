@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         destination: "/",
       },
       {
+        source: "/testimonials",
+        destination: "/",
+      },
+      {
         source: "/faq",
         destination: "/",
       },
@@ -45,6 +49,10 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/noida/placements",
+        destination: "/noida",
+      },
+      {
+        source: "/noida/testimonials",
         destination: "/noida",
       },
       {
