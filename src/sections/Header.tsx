@@ -9,9 +9,10 @@ import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   onOpenDemo: () => void;
+  showPricing?: boolean;
 }
 
-export const Header = ({ onOpenDemo }: HeaderProps) => {
+export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
   const pathname = usePathname();
   const { isScrolled } = useScroll(20);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -20,9 +21,12 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
 
   const navLinks = [
     { label: "Home", href: basePath || "/" },
-    { label: "Highlights", href: `${basePath}/heighlights` },
+    { label: "Highlights", href: `${basePath}/highlights` },
     { label: "Curriculum", href: `${basePath}/curriculum` },
-    { label: "Pricing", href: `${basePath}/pricing` },
+    { 
+      label: showPricing ? "Pricing" : "Courses", 
+      href: `${basePath}${showPricing ? "/pricing" : "/courses"}` 
+    },
     { label: "Placements", href: `${basePath}/placements` },
     { label: "FAQ", href: `${basePath}/faq` },
   ];
@@ -38,9 +42,9 @@ export const Header = ({ onOpenDemo }: HeaderProps) => {
     }
 
     let targetId = "";
-    if (href.endsWith("/heighlights")) targetId = "highlights";
+    if (href.endsWith("/highlights")) targetId = "highlights";
     else if (href.endsWith("/curriculum")) targetId = "curriculum";
-    else if (href.endsWith("/pricing")) targetId = "pricing";
+    else if (href.endsWith("/pricing") || href.endsWith("/courses")) targetId = "pricing";
     else if (href.endsWith("/placements")) targetId = "placements";
     else if (href.endsWith("/faq")) targetId = "faq";
 

@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/heighlights",
+        source: "/highlights",
         destination: "/",
       },
       {
@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         destination: "/",
       },
       {
+        source: "/courses",
+        destination: "/",
+      },
+      {
         source: "/placements",
         destination: "/",
       },
@@ -24,7 +28,7 @@ const nextConfig: NextConfig = {
         destination: "/",
       },
       {
-        source: "/noida/heighlights",
+        source: "/noida/highlights",
         destination: "/noida",
       },
       {
@@ -33,6 +37,10 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/noida/pricing",
+        destination: "/noida",
+      },
+      {
+        source: "/noida/courses",
         destination: "/noida",
       },
       {

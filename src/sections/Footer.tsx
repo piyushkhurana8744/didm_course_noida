@@ -5,7 +5,11 @@ import { Mail, Send, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 
-export const Footer = () => {
+interface FooterProps {
+  showPricing?: boolean;
+}
+
+export const Footer = ({ showPricing = true }: FooterProps) => {
   const { toast } = useToast();
   const [email, setEmail] = React.useState("");
 
@@ -20,7 +24,7 @@ export const Footer = () => {
     { label: "Home", href: "#" },
     { label: "Highlights", href: "#highlights" },
     { label: "Curriculum", href: "#curriculum" },
-    { label: "Pricing Options", href: "#pricing" },
+    { label: showPricing ? "Pricing Options" : "Courses", href: "#pricing" },
     { label: "Student Testimonials", href: "#reviews" },
     { label: "FAQ Portal", href: "#faq" },
   ];

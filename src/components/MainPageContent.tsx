@@ -50,9 +50,9 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
   React.useEffect(() => {
     const path = window.location.pathname;
     let targetId = "";
-    if (path.endsWith("/heighlights")) targetId = "highlights";
+    if (path.endsWith("/highlights")) targetId = "highlights";
     else if (path.endsWith("/curriculum")) targetId = "curriculum";
-    else if (path.endsWith("/pricing")) targetId = "pricing";
+    else if (path.endsWith("/pricing") || path.endsWith("/courses")) targetId = "pricing";
     else if (path.endsWith("/placements")) targetId = "placements";
     else if (path.endsWith("/faq")) targetId = "faq";
 
@@ -98,6 +98,10 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
 
   // Open demo class registration
   const triggerDemoModal = (courseName: string = "") => {
+    if (courseName && (courseName.toLowerCase().includes("brochure") || courseName.toLowerCase().includes("syllabus"))) {
+      setIsBrochureOpen(true);
+      return;
+    }
     setSelectedCourse(courseName || "Free Demo Class");
     setValue("center", "Noida");
     setIsDemoOpen(true);
@@ -182,15 +186,20 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     setIsBrochureOpen(false);
     
     toast(`Syllabus brochure generated for ${center} center! Download starting automatically for ${email}.`, "success");
-    // Trigger mock file download
-    window.open("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", "_blank");
+    // Trigger file download
+    const link = document.createElement("a");
+    link.href = "/E-brochure (5).pdf";
+    link.download = "E-brochure (5).pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     router.push("/thank-you");
   };
 
   return (
     <>
       {/* Sticky header navigation */}
-      <Header onOpenDemo={() => triggerDemoModal()} />
+      <Header onOpenDemo={() => triggerDemoModal()} showPricing={showPricing} />
 
       {/* Main Page Layout Sections */}
       <main className="flex-1 w-full">
@@ -250,7 +259,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       </main>
 
       {/* Footer credits and newsletter sign-up */}
-      <Footer />
+      <Footer showPricing={showPricing} />
 
       {/* Floating widgets (WhatsApp, back to top, mobile sticky bottom) */}
       <FloatingWidgets onOpenDemo={() => triggerDemoModal()} />

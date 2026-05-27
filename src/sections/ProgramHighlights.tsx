@@ -73,7 +73,7 @@ export const ProgramHighlights = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          formType: "Attend Free Workshop Form",
+          formType: "Download Brochure Form",
         }),
       });
     } catch (err) {
@@ -81,7 +81,14 @@ export const ProgramHighlights = () => {
     }
 
     setIsSubmitting(false);
-    toast(`Successfully registered! We have booked your seat at the ${data.center.toUpperCase()} workshop. check email for schedule.`, "success");
+    toast("Syllabus brochure generated! Download starting automatically.", "success");
+    // Trigger file download
+    const link = document.createElement("a");
+    link.href = "/E-brochure (5).pdf";
+    link.download = "E-brochure (5).pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     reset();
     router.push("/thank-you");
   };
@@ -291,17 +298,17 @@ export const ProgramHighlights = () => {
 
             {/* Column C: Workshop Booking Card */}
             <div className="lg:col-span-4 h-full">
-              <Card className="border-zinc-200 shadow-sm p-6 sm:p-8 h-full flex flex-col justify-between bg-white text-left relative">
+              <Card className="border-zinc-200 shadow-sm p-6 sm:p-8 h-full flex flex-col justify-between bg-white text-left">
                 
-                {/* Sticky Hot Deal Badge */}
-                <div className="absolute -top-3.5 right-4 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full flex items-center gap-1 shadow-md shadow-amber-500/10">
-                  <Flame className="h-3 w-3 fill-white" />
-                  Seats Filling Fast
-                </div>
-
                 <div>
+                  {/* Hot Deal Badge */}
+                  <div className="inline-flex bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full items-center gap-1.5 shadow-md shadow-amber-500/10 mb-3.5">
+                    <Flame className="h-3 w-3 fill-white" />
+                    <span>Seats Filling Fast</span>
+                  </div>
+
                   <h3 className="text-lg font-black text-zinc-800 uppercase tracking-wide border-b border-zinc-150 pb-3 mb-6">
-                    Attend FREE Workshop
+                    Download Brochure
                   </h3>
 
                   <form onSubmit={handleSubmit(onSubmitInquiry)} className="space-y-4">
@@ -396,10 +403,10 @@ export const ProgramHighlights = () => {
                       {isSubmitting ? (
                         <>
                           <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>Submitting...</span>
+                          <span>Downloading...</span>
                         </>
                       ) : (
-                        <span>Submit Your Request</span>
+                        <span>DOWNLOAD</span>
                       )}
                     </Button>
 
