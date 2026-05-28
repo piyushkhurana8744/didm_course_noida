@@ -157,7 +157,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* Google Tag Manager - Head Script */}
+        {/* Google Tag Manager - Head Script (Uncomment and replace GTM-XXXXXX with actual ID when ready)
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -167,6 +167,7 @@ export default function RootLayout({
             })(window,document,'script','dataLayer','GTM-XXXXXX');`,
           }}
         />
+        */}
         
         {/* JSON-LD Schema Injections */}
         <script
@@ -183,7 +184,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white">
-        {/* Google Tag Manager (noscript) - Body Fallback */}
+        {/* Google Tag Manager (noscript) - Body Fallback (Uncomment and replace GTM-XXXXXX with actual ID when ready)
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
@@ -192,6 +193,7 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        */}
 
         <ToastProvider>
           <div className="flex-1 flex flex-col relative w-full">

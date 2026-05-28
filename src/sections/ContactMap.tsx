@@ -222,7 +222,7 @@ export const ContactMap = ({ onOpenDemo }: ContactMapProps) => {
               <div className="w-full rounded-2xl overflow-hidden border border-zinc-200/80 shadow-xs bg-zinc-50">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/didm-course-fees.jpg"
+                  src="https://images.unsplash.com/photo-1532649538693-f3a2ec1bf8bd?auto=format&fit=crop&q=80&w=800"
                   alt="DIDM Noida graduates at convocation ceremony holding diplomas"
                   className="w-full h-auto block"
                 />
