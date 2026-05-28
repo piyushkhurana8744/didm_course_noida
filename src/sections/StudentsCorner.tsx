@@ -69,17 +69,7 @@ export const StudentsCorner = () => {
               </p>
             </div>
 
-            <div className="mt-10 flex justify-end">
-              <button 
-                onClick={() => {
-                  const el = document.getElementById("gallery-section");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="inline-flex items-center gap-2 bg-[#a81c1c] hover:bg-[#901818] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider px-7 py-3.5 rounded-full shadow-md shadow-brand-red/10 cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Our Gallery <span>→</span>
-              </button>
-            </div>
+
           </motion.div>
 
           {/* Right Column: Noida Branch Students Corner Card */}

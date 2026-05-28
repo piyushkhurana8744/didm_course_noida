@@ -15,7 +15,6 @@ import { FAQ } from "@/sections/FAQ";
 import { StudentFeedback } from "@/sections/StudentFeedback";
 import { StudentsCorner } from "@/sections/StudentsCorner";
 import { StudentsHappyFaces } from "@/sections/StudentsHappyFaces";
-import { Gallery } from "@/sections/Gallery";
 import { DigitalCareerStart } from "@/sections/DigitalCareerStart";
 import { ContactMap } from "@/sections/ContactMap";
 import { Footer } from "@/sections/Footer";
@@ -68,7 +67,6 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     else if (path.endsWith("/curriculum")) targetId = "curriculum";
     else if (path.endsWith("/pricing") || path.endsWith("/courses")) targetId = "pricing";
     else if (path.endsWith("/placements") || path.endsWith("/testimonials")) targetId = "placements";
-    else if (path.endsWith("/gallery")) targetId = "gallery-section";
     else if (path.endsWith("/faq")) targetId = "faq";
 
     if (targetId) {
@@ -269,9 +267,6 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
 
         {/* 7b. Students Happy Faces Gallery */}
         <StudentsHappyFaces />
-
-        {/* 7c. Noida Campus Gallery Section */}
-        <Gallery />
 
         {/* 12. FAQ Accordions */}
         <FAQ />

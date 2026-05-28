@@ -528,7 +528,7 @@ export const PLACEMENTS_DATA: PlacementCard[] = [
 export const GALLERY_DATA: GalleryItem[] = [
   { id: 1, title: "Modern High-Tech Classroom", category: "classroom", imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600" },
   { id: 2, title: "Google Ads Certification Workshop", category: "workshop", imageUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=600" },
-  { id: 3, title: "Monthly Student Graduation Ceremony", category: "event", imageUrl: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=600" },
+  { id: 3, title: "Monthly Student Graduation Ceremony", category: "event", imageUrl: "https://images.unsplash.com/photo-1523580494863-6f3031224b94?auto=format&fit=crop&q=80&w=600" },
   { id: 4, title: "Interactive Doubt Solving Lab", category: "classroom", imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=600" },
   { id: 5, title: "Corporate Panel on AI in Marketing", category: "event", imageUrl: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=600" },
   { id: 6, title: "Live SEO Audit Campaign Hackathon", category: "workshop", imageUrl: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=600" }
