@@ -3,37 +3,37 @@ import { MetadataRoute } from "next";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://noidadigital.in",
+      url: "https://didm.in",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
-      url: "https://noidadigital.in/#highlights",
+      url: "https://didm.in/#highlights",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://noidadigital.in/#curriculum",
+      url: "https://didm.in/#curriculum",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      url: "https://noidadigital.in/#pricing",
+      url: "https://didm.in/#pricing",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://noidadigital.in/#placements",
+      url: "https://didm.in/#placements",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
-      url: "https://noidadigital.in/#faq",
+      url: "https://didm.in/#faq",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,

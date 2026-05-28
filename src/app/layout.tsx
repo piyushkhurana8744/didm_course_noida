@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
   description: "Learn Advanced Digital Marketing in Noida. Master SEO, Google Ads, Meta Ads, AI Tools & Automations. 100% Placements & Guaranteed Paid Internship.",
-  metadataBase: new URL("https://noidadigital.in"),
+  metadataBase: new URL("https://didm.in"),
   icons: {
     icon: "/didmfavicon.png",
   },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
     description: "Learn SEO, Google Ads, Meta Ads, and AI Tools. Join Noida's #1 Rated Practical Academy with 100% Placement Support.",
-    url: "https://noidadigital.in",
+    url: "https://didm.in",
     siteName: "ZICA Digital Academy Noida",
     images: [
       {
@@ -69,8 +69,8 @@ export default function RootLayout({
     "@type": "EducationalOrganization",
     "name": "ZICA Digital Academy Noida",
     "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
-    "@id": "https://noidadigital.in/#academy",
-    "url": "https://noidadigital.in",
+    "@id": "https://didm.in/#academy",
+    "url": "https://didm.in",
     "telephone": "+918447222054",
     "address": {
       "@type": "PostalAddress",
@@ -114,7 +114,7 @@ export default function RootLayout({
     "provider": {
       "@type": "EducationalOrganization",
       "name": "ZICA Digital Academy Noida",
-      "sameAs": "https://noidadigital.in"
+      "sameAs": "https://didm.in"
     }
   };
 
@@ -126,13 +126,13 @@ export default function RootLayout({
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://noidadigital.in"
+        "item": "https://didm.in"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Noida Campus Courses",
-        "item": "https://noidadigital.in/#curriculum"
+        "item": "https://didm.in/#curriculum"
       }
     ]
   };
