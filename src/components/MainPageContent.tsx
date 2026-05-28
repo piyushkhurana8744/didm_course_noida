@@ -15,6 +15,7 @@ import { FAQ } from "@/sections/FAQ";
 import { StudentFeedback } from "@/sections/StudentFeedback";
 import { StudentsCorner } from "@/sections/StudentsCorner";
 import { StudentsHappyFaces } from "@/sections/StudentsHappyFaces";
+import { Gallery } from "@/sections/Gallery";
 import { DigitalCareerStart } from "@/sections/DigitalCareerStart";
 import { ContactMap } from "@/sections/ContactMap";
 import { Footer } from "@/sections/Footer";
@@ -48,12 +49,26 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
   const router = useRouter();
 
   React.useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === "#demo") {
+        triggerDemoModal();
+      }
+    };
+
+    // Check hash on initial load
+    handleHash();
+
+    // Listen for hash changes
+    window.addEventListener("hashchange", handleHash);
+
     const path = window.location.pathname;
     let targetId = "";
     if (path.endsWith("/highlights")) targetId = "highlights";
     else if (path.endsWith("/curriculum")) targetId = "curriculum";
     else if (path.endsWith("/pricing") || path.endsWith("/courses")) targetId = "pricing";
     else if (path.endsWith("/placements") || path.endsWith("/testimonials")) targetId = "placements";
+    else if (path.endsWith("/gallery")) targetId = "gallery-section";
     else if (path.endsWith("/faq")) targetId = "faq";
 
     if (targetId) {
@@ -70,6 +85,10 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
         }
       }, 300);
     }
+
+    return () => {
+      window.removeEventListener("hashchange", handleHash);
+    };
   }, []);
   
   // Dialog visibility states
@@ -250,6 +269,9 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
 
         {/* 7b. Students Happy Faces Gallery */}
         <StudentsHappyFaces />
+
+        {/* 7c. Noida Campus Gallery Section */}
+        <Gallery />
 
         {/* 12. FAQ Accordions */}
         <FAQ />

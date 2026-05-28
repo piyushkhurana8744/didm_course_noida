@@ -32,10 +32,16 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const isMainPage = pathname === "/" || pathname === "/noida";
+    if (!isMainPage) {
+      setMobileMenuOpen(false);
+      return;
+    }
+
     e.preventDefault();
     setMobileMenuOpen(false);
 
-    if (href === "#" || href === "/" || href === "/noida") {
+    if (href === "#" || href === "/" || href === "/noida" || href === "") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       window.history.pushState(null, "", href === "#" ? (basePath || "/") : href);
       return;
@@ -78,8 +84,8 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
             {/* Logos Panel */}
             <div className="flex items-center">
               <a
-                href="#"
-                onClick={(e) => handleNavClick(e, "#")}
+                href={basePath || "/"}
+                onClick={(e) => handleNavClick(e, basePath || "/")}
                 className="flex items-center group cursor-pointer focus:outline-none"
               >
                 <img

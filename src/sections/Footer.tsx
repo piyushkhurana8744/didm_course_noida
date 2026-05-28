@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface FooterProps {
   showPricing?: boolean;
@@ -88,9 +89,8 @@ export const Footer = ({ showPricing = true }: FooterProps) => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-10 text-xs text-red-200 font-semibold">
           <p>© {new Date().getFullYear()} Noida Digital Marketing Institute. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms & Conditions</Link>
           </div>
         </div>
 
