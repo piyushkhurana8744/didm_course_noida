@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { CheckCircle2, Phone, Calendar, ArrowLeft, GraduationCap, MapPin } from "lucide-react";
 import { Metadata } from "next";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Registration Successful | DIDM Noida Campus",
@@ -11,6 +12,20 @@ export const metadata: Metadata = {
 export default function ThankYouPage() {
   return (
     <main className="min-h-screen bg-zinc-50 flex items-center justify-center py-20 px-4 relative overflow-hidden bg-dot-pattern-light">
+      {/* Event snippet for Submit lead form conversion page */}
+      <Script
+        id="google-ads-conversion-tracking"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            gtag('event', 'conversion', {
+              'send_to': 'AW-18183560002/318UCMG1mLQcEMK2zN5D',
+              'value': 1.0,
+              'currency': 'INR'
+            });
+          `,
+        }}
+      />
       {/* Background blobs for premium feel */}
       <div className="absolute top-1/4 -left-32 w-[400px] h-[400px] bg-brand-red/[0.04] rounded-full blur-[100px] pointer-events-none animate-pulse-slow" />
       <div className="absolute bottom-1/4 -right-32 w-[450px] h-[450px] bg-amber-500/[0.03] rounded-full blur-[100px] pointer-events-none animate-pulse-slow" />
