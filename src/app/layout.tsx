@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
-  description: "Learn Advanced Digital Marketing in Noida. Master SEO, Google Ads, Meta Ads, AI Tools & Automations. 100% Placements & Guaranteed Paid Internship.",
-  metadataBase: new URL("https://didm.in"),
+  title: "Digital Marketing Course in Noida | 100% Placement Assistance | DIDM",
+  description: "Learn SEO, Google Ads, Social Media Marketing, AI Tools, and more at DIDM. Get practical training, industry certifications, and career-focused placement support",
+  metadataBase: new URL("https://join.didm.co.in"),
   icons: {
     icon: "/didmfavicon.png",
   },
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
-    description: "Learn SEO, Google Ads, Meta Ads, and AI Tools. Join Noida's #1 Rated Practical Academy with 100% Placement Support.",
-    url: "https://didm.in",
-    siteName: "ZICA Digital Academy Noida",
+    title: "Digital Marketing Course in Noida | 100% Placement Assistance | DIDM",
+    description: "Learn SEO, Google Ads, Social Media Marketing, AI Tools, and more at DIDM. Get practical training, industry certifications, and career-focused placement support",
+    url: "https://join.didm.co.in/",
+    siteName: "DIDM - Delhi Institute of Digital Marketing",
     images: [
       {
         url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
         width: 800,
         height: 600,
-        alt: "ZICA Digital Academy Noida Campus",
+        alt: "DIDM Noida Campus",
       },
     ],
     locale: "en_IN",
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Best Digital Marketing Institute in Noida | ZICA Digital Academy",
-    description: "Master PPC, SEO, Content, and AI Marketing tools. Guaranteed Placements & Internships in Noida.",
+    title: "Digital Marketing Course in Noida | 100% Placement Assistance | DIDM",
+    description: "Learn SEO, Google Ads, Social Media Marketing, AI Tools, and more at DIDM. Get practical training, industry certifications, and career-focused placement support",
     images: ["https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"],
   },
   robots: {
@@ -169,6 +169,10 @@ export default function RootLayout({
         />
         */}
         
+        {/* Google Schema/Search Console itemprop metadata */}
+        <meta itemProp="title" content="Digital Marketing Course in Noida | 100% Placement Assistance | DIDM" />
+        <meta itemProp="description" content="Learn SEO, Google Ads, Social Media Marketing, AI Tools, and more at DIDM. Get practical training, industry certifications, and career-focused placement support" />
+
         {/* JSON-LD Schema Injections */}
         <script
           type="application/ld+json"
