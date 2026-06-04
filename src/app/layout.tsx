@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -143,20 +144,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18183560002" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'AW-18183560002');
-            `,
-          }}
-        />
-
         {/* Google Tag Manager - Head Script (Uncomment and replace GTM-XXXXXX with actual ID when ready)
         <script
           dangerouslySetInnerHTML={{
@@ -188,6 +175,24 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-white">
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18183560002"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-tag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-18183560002');
+            `,
+          }}
+        />
+
         {/* Google Tag Manager (noscript) - Body Fallback (Uncomment and replace GTM-XXXXXX with actual ID when ready)
         <noscript>
           <iframe

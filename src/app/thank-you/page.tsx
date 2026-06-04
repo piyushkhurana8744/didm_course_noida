@@ -9,7 +9,22 @@ export const metadata: Metadata = {
   description: "Thank you for registering at Delhi Institute of Digital Marketing (DIDM) Noida Campus. Our career specialist will contact you shortly to confirm your seat.",
 };
 
-export default function ThankYouPage() {
+export default async function ThankYouPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  
+  // Dynamically resolve value and currency with defaults
+  const rawValue = resolvedSearchParams.value;
+  const value = typeof rawValue === "string" && !isNaN(parseFloat(rawValue))
+    ? parseFloat(rawValue)
+    : 1.0;
+  
+  const rawCurrency = resolvedSearchParams.currency;
+  const currency = typeof rawCurrency === "string" ? rawCurrency : "INR";
+
   return (
     <main className="min-h-screen bg-zinc-50 flex items-center justify-center py-20 px-4 relative overflow-hidden bg-dot-pattern-light">
       {/* Event snippet for Submit lead form conversion page */}
@@ -20,8 +35,8 @@ export default function ThankYouPage() {
           __html: `
             gtag('event', 'conversion', {
               'send_to': 'AW-18183560002/318UCMG1mLQcEMK2zN5D',
-              'value': 1.0,
-              'currency': 'INR'
+              'value': ${value},
+              'currency': '${currency}'
             });
           `,
         }}
