@@ -136,7 +136,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          formType: "Digital Marketing Course Form 2",
+          formType: "DIDM Noida Adword Form 2",
         }),
       });
     } catch (err) {
