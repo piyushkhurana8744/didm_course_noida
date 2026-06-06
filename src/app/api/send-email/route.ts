@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     const smtpPass = process.env.SMTP_PASS;
     const smtpFrom = process.env.SMTP_FROM || process.env.EMAIL_FROM || `"DIDM Noida Leads" <leads@didm.in>`;
     const smtpTo = process.env.SMTP_TO || process.env.ADMIN_EMAIL || "info@didm.in"; // destination email
+    const smtpCc = process.env.SMTP_CC || "manishsharma@onlinestrikers.com";
 
     if (!smtpUser || !smtpPass) {
       console.warn("SMTP credentials (SMTP_USER or SMTP_PASS) not configured. Email NOT sent. Lead details:", body);
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
     const mailOptions = {
       from: smtpFrom,
       to: smtpTo,
+      cc: smtpCc,
       subject: `New Lead: ${formType || "Inquiry Form"} - ${name}`,
       text: `
 New Form Submission Details:
