@@ -56,7 +56,7 @@ export const Hero = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          formType: "Hero Banner Overlay Form",
+          formType: "Digital Marketing Course Form 1",
         }),
       });
     } catch (err) {

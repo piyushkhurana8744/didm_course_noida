@@ -83,7 +83,7 @@ export default async function ThankYouPage({
             <div>
               <h4 className="text-sm font-extrabold text-zinc-800 uppercase tracking-wide">1. Phone Verification call</h4>
               <p className="text-xs text-zinc-500 font-semibold mt-1 leading-relaxed">
-                You will receive a verification call on your provided mobile number from DIDM Noida (+91 88005 05151) within 15 minutes.
+                You will receive a verification call on your provided mobile number from DIDM Noida (+91 98738 37467) within 15 minutes.
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default async function ThankYouPage({
             <Phone className="h-5 w-5 text-brand-red shrink-0" />
             <div className="min-w-0">
               <span className="text-[9px] font-black text-zinc-400 uppercase tracking-wider block">Direct Admissions Helpline</span>
-              <a href="tel:08447222054" className="text-xs font-bold text-zinc-750 hover:text-brand-red block transition-colors">+91 84472 22054</a>
+              <a href="tel:09873837467" className="text-xs font-bold text-zinc-750 hover:text-brand-red block transition-colors">+91 98738 37467</a>
             </div>
           </div>
         </div>

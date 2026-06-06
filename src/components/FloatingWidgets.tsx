@@ -15,7 +15,7 @@ export const FloatingWidgets = ({ onOpenDemo }: FloatingWidgetsProps) => {
 
   const handleWhatsApp = () => {
     const message = "Hi! I am interested in the Digital Marketing Course at Noida campus. Please share details.";
-    const url = `https://wa.me/918447222054?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/919873837467?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
   };
 
@@ -39,7 +39,7 @@ export const FloatingWidgets = ({ onOpenDemo }: FloatingWidgetsProps) => {
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => window.open("tel:+918447222054")}
+          onClick={() => window.open("tel:+919873837467")}
           className="w-14 h-14 rounded-full bg-[#c90c0c] hover:bg-[#b00a0a] text-white flex items-center justify-center shadow-xl shadow-[#c90c0c]/20 cursor-pointer border border-[#c90c0c]/20"
         >
           <Phone className="h-6 w-6 text-white" />

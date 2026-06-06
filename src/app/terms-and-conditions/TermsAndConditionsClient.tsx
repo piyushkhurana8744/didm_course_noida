@@ -222,7 +222,7 @@ export function TermsAndConditionsClient() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4.5 w-4.5 text-brand-red" />
-                <span>Contact Desk: <a href="tel:+918800505151" className="text-brand-red hover:underline font-bold">+91 88005 05151</a></span>
+                <span>Contact Desk: <a href="tel:+919873837467" className="text-brand-red hover:underline font-bold">+91 98738 37467</a></span>
               </div>
             </div>
 

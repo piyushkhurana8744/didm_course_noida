@@ -549,7 +549,7 @@ export const FAQ_DATA: FAQItem[] = [
   },
   {
     question: "What is the cost of digital marketing training in Noida?",
-    answer: "The Delhi Institute of Digital Marketing (DIDM) offers three different training programs at its digital marketing institute in Noida: Master in Digital Marketing Training Program, Advanced Digital Marketing Training Program, and Professional Digital Marketing Training Program. The fee will be determined by which training program you decide to choose. For more information on the fee, kindly contact us at +91 8800505151 or visit our digital marketing training center in Noida."
+    answer: "The Delhi Institute of Digital Marketing (DIDM) offers three different training programs at its digital marketing institute in Noida: Master in Digital Marketing Training Program, Advanced Digital Marketing Training Program, and Professional Digital Marketing Training Program. The fee will be determined by which training program you decide to choose. For more information on the fee, kindly contact us at +91 9873837467 or visit our digital marketing training center in Noida."
   },
   {
     question: "Will the digital marketing training in Noida be conducted Online or offline?",

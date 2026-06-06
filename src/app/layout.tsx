@@ -72,7 +72,7 @@ export default function RootLayout({
     "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
     "@id": "https://didm.in/#academy",
     "url": "https://didm.in",
-    "telephone": "+918447222054",
+    "telephone": "+919873837467",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "A-40, 4th Floor",

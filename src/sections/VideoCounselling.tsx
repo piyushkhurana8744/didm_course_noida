@@ -182,7 +182,7 @@ export const VideoCounselling = () => {
                   Book Seat For Free Counselling
                 </h3>
                 <p className="text-zinc-200 text-xs sm:text-sm font-semibold tracking-wider mt-1.5">
-                  Speak To Our Specialist - <a href="tel:+918800505151" className="hover:underline text-white">+91 - 8800505151</a>
+                  Speak To Our Specialist - <a href="tel:+919873837467" className="hover:underline text-white">+91 - 9873837467</a>
                 </p>
               </div>
 

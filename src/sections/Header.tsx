@@ -129,7 +129,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
               <div className="flex items-center gap-3 border-r border-zinc-200 pr-5">
                 {/* WhatsApp Link */}
                 <a
-                  href="https://wa.me/918447222054?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                  href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-zinc-800 hover:text-emerald-600 transition-all duration-300 font-extrabold text-sm"
@@ -144,12 +144,12 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
                 
                 {/* Phone Call Link */}
                 <a
-                  href="tel:+918447222054"
+                  href="tel:+919873837467"
                   className="flex items-center gap-1.5 text-zinc-800 hover:text-brand-red transition-all duration-300 font-extrabold text-sm"
                   title="Call Us"
                 >
                   <Phone className="h-4 w-4 text-brand-red animate-pulse" />
-                  <span>84472 22054</span>
+                  <span>98738 37467</span>
                 </a>
               </div>
               <Button
@@ -167,7 +167,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
             <div className="flex items-center gap-2.5 lg:hidden">
               {/* Phone Icon */}
               <a
-                href="tel:+918447222054"
+                href="tel:+919873837467"
                 className="p-2 text-brand-red bg-zinc-50 border border-zinc-200 rounded-lg hover:text-red-650 transition-colors"
                 title="Call Advisor"
               >
@@ -176,7 +176,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
 
               {/* WhatsApp Icon */}
               <a
-                href="https://wa.me/918447222054?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-emerald-600 bg-zinc-50 border border-zinc-200 rounded-lg hover:text-emerald-550 transition-colors"
@@ -247,14 +247,14 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
               <div className="flex flex-col gap-3 mt-8 border-t border-zinc-200 pt-6">
                 <div className="flex items-center justify-between gap-3 mb-1">
                   <a
-                    href="tel:+918447222054"
+                    href="tel:+919873837467"
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-200 text-brand-red bg-zinc-50 hover:bg-zinc-100 font-extrabold text-sm transition-all"
                   >
                     <Phone className="h-4 w-4" />
                     <span>Call Us</span>
                   </a>
                   <a
-                    href="https://wa.me/918447222054?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                    href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-200 text-emerald-600 bg-zinc-50 hover:bg-zinc-100 font-extrabold text-sm transition-all"

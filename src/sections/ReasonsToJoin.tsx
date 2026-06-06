@@ -100,11 +100,11 @@ export const ReasonsToJoin = ({ onOpenDemo }: ReasonsToJoinProps) => {
             Speak with our digital marketing course experts for Batches, fee &amp; curriculum.
           </p>
           <a
-            href="tel:+918800505151"
+            href="tel:+919873837467"
             className="inline-flex items-center gap-2.5 border-2 border-[#c90c0c] text-[#c90c0c] font-extrabold text-base sm:text-lg px-7 py-3 rounded-full hover:bg-[#c90c0c] hover:text-white transition-all duration-300 shadow-sm mt-2"
           >
             <Phone className="h-5 w-5" />
-            +91-8800505151
+            +91-9873837467
           </a>
         </div>
       </section>

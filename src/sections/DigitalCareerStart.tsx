@@ -34,7 +34,7 @@ export const DigitalCareerStart = ({ onOpenDemo }: DigitalCareerStartProps) => {
             <div className="flex items-center justify-center gap-3 mb-6">
               {/* WhatsApp Link */}
               <a
-                href="https://wa.me/918447222054?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 hover:bg-emerald-100 hover:scale-105 transition-all shadow-2xs"
@@ -47,7 +47,7 @@ export const DigitalCareerStart = ({ onOpenDemo }: DigitalCareerStartProps) => {
 
               {/* Call Us Link */}
               <a
-                href="tel:+918447222054"
+                href="tel:+919873837467"
                 className="w-9 h-9 rounded-full bg-red-50 text-brand-red flex items-center justify-center border border-red-100 hover:bg-red-100 hover:scale-105 transition-all shadow-2xs"
                 title="Call Advisor"
               >
@@ -55,11 +55,11 @@ export const DigitalCareerStart = ({ onOpenDemo }: DigitalCareerStartProps) => {
               </a>
 
               <span className="text-brand-red font-black text-base">
-                84472 22054
+                98738 37467
               </span>
             </div>
             <a
-              href="tel:+918447222054"
+              href="tel:+919873837467"
               className="bg-[#c90c0c] hover:bg-[#b00a0a] active:scale-[0.98] text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider px-8 py-3 rounded-full shadow-sm hover:shadow transition-all cursor-pointer inline-block text-center"
             >
               Talk to Advisor

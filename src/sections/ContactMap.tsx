@@ -133,11 +133,11 @@ export const ContactMap = ({ onOpenDemo }: ContactMapProps) => {
                   <span className="text-[8px] font-black text-zinc-455 uppercase tracking-wider block">
                     Helpline Numbers
                   </span>
-                  <a href="tel:08447222054" className="text-xs font-extrabold text-zinc-800 hover:text-brand-red block transition-colors">
-                    08447222054
+                  <a href="tel:09873837467" className="text-xs font-extrabold text-zinc-800 hover:text-brand-red block transition-colors">
+                    09873837467
                   </a>
-                  <a href="tel:08800505151" className="text-[11px] font-bold text-zinc-500 hover:text-brand-red block transition-colors">
-                    +91 88005 05151
+                  <a href="tel:09873837467" className="text-[11px] font-bold text-zinc-500 hover:text-brand-red block transition-colors">
+                    +91 98738 37467
                   </a>
                 </div>
                 <div className="p-3.5 rounded-xl bg-white border border-zinc-150 flex flex-col gap-0.5 shadow-2xs">
