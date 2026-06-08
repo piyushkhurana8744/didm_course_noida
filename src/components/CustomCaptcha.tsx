@@ -75,24 +75,64 @@ export const CustomCaptcha = React.forwardRef<CustomCaptchaRef, CustomCaptchaPro
 
     const isSm = size === "sm";
 
+    if (isSm) {
+      return (
+        <div className="flex flex-col text-left w-full bg-zinc-50 border border-zinc-200 shadow-xs gap-1 p-2 my-1 rounded-lg">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 p-1 rounded-md">
+                <ShieldCheck className="h-3.5 w-3.5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[8px] font-black text-zinc-500 uppercase tracking-wider leading-none">
+                  Verify
+                </span>
+                <span className="font-bold text-zinc-800 tracking-tight text-[11px] mt-0.5 leading-none">
+                  {loading ? "..." : question}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 flex-1 justify-end">
+              <input
+                id={id || "custom-captcha-input"}
+                type="text"
+                value={userAnswer}
+                onChange={handleInputChange}
+                placeholder="Ans"
+                disabled={loading}
+                className={`w-14 bg-white border text-center text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all py-1 px-1.5 text-xs rounded-md ${
+                  error ? "border-red-500" : "border-zinc-300"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={fetchChallenge}
+                disabled={loading}
+                title="Get new question"
+                className="text-zinc-400 hover:text-brand-red hover:bg-zinc-100 rounded-md transition-colors cursor-pointer shrink-0 p-1"
+              >
+                <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin text-brand-red" : ""}`} />
+              </button>
+            </div>
+          </div>
+          {error && <span className="text-red-500 font-semibold pl-1 text-[9px] leading-tight">{error}</span>}
+        </div>
+      );
+    }
+
     return (
-      <div className={`flex flex-col text-left w-full bg-zinc-50 border border-zinc-200 shadow-xs ${
-        isSm ? "gap-1.5 p-2 my-1 rounded-lg" : "gap-2 p-3 my-2 rounded-xl"
-      }`}>
+      <div className="flex flex-col text-left w-full bg-zinc-50 border border-zinc-200 shadow-xs gap-2 p-3 my-2 rounded-xl">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className={`bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 ${
-              isSm ? "p-1 rounded-md" : "p-1.5 rounded-lg"
-            }`}>
-              <ShieldCheck className={isSm ? "h-3.5 w-3.5" : "h-4 w-4"} />
+            <div className="bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 p-1.5 rounded-lg">
+              <ShieldCheck className="h-4 w-4" />
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">
                 Verification
               </span>
-              <span className={`font-bold text-zinc-805 tracking-tight mt-0.5 ${
-                isSm ? "text-[11px]" : "text-[13px]"
-              }`}>
+              <span className="font-bold text-zinc-800 tracking-tight mt-0.5 text-[13px]">
                 {loading ? "Generating question..." : question}
               </span>
             </div>
@@ -103,11 +143,9 @@ export const CustomCaptcha = React.forwardRef<CustomCaptchaRef, CustomCaptchaPro
             onClick={fetchChallenge}
             disabled={loading}
             title="Get new question"
-            className={`text-zinc-400 hover:text-brand-red hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer shrink-0 disabled:opacity-50 ${
-              isSm ? "p-1" : "p-1.5"
-            }`}
+            className="text-zinc-400 hover:text-brand-red hover:bg-zinc-100 rounded-lg transition-colors cursor-pointer shrink-0 disabled:opacity-50 p-1.5"
           >
-            <RefreshCw className={`${isSm ? "h-3 w-3" : "h-3.5 w-3.5"} ${loading ? "animate-spin text-brand-red" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin text-brand-red" : ""}`} />
           </button>
         </div>
 
@@ -118,13 +156,11 @@ export const CustomCaptcha = React.forwardRef<CustomCaptchaRef, CustomCaptchaPro
           onChange={handleInputChange}
           placeholder="Solve the problem above"
           disabled={loading}
-          className={`w-full bg-white border text-zinc-850 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
-            isSm ? "py-1.5 px-2.5 text-xs rounded-lg placeholder:text-xs" : "py-2.5 px-3.5 text-sm rounded-xl"
-          } ${
+          className={`w-full bg-white border text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all py-2.5 px-3.5 text-sm rounded-xl ${
             error ? "border-red-500" : "border-zinc-300"
           }`}
         />
-        {error && <span className={`text-red-500 font-semibold pl-1 ${isSm ? "text-[10px]" : "text-xs"}`}>{error}</span>}
+        {error && <span className="text-red-500 font-semibold pl-1 text-xs">{error}</span>}
       </div>
     );
   }

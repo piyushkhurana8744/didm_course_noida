@@ -112,8 +112,7 @@ export const Hero = () => {
     formInstance: typeof desktopForm,
     onSubmitHandler: (data: ContactFormValues) => void,
     recaptchaRef: React.RefObject<CustomCaptchaRef | null>,
-    captchaId: string,
-    isDesktop: boolean
+    captchaId: string
   ) => {
     const {
       register,
@@ -125,7 +124,7 @@ export const Hero = () => {
     return (
       <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-white/25">
         {/* Branded Red Header */}
-        <div className="bg-gradient-to-r from-brand-red/85 via-red-600/85 to-red-700/85 backdrop-blur-md px-4 py-2 text-white flex items-center justify-between">
+        <div className="bg-gradient-to-r from-brand-red/85 via-red-600/85 to-red-700/85 backdrop-blur-md px-4 py-2.5 text-white flex items-center justify-between">
           <h3 className="text-[12px] font-extrabold tracking-tight uppercase flex items-center gap-1.5">
             <GraduationCap className="h-4.5 w-4.5 shrink-0 text-white" />
             Book Free Demo
@@ -137,174 +136,82 @@ export const Hero = () => {
 
         {/* Form Body */}
         <div className="bg-white/75 backdrop-blur-md p-3.5">
-          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-2">
-            {isDesktop ? (
-              <>
-                {/* Grid for Name and Email */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                      <input
-                        type="text"
-                        placeholder="Name"
-                        disabled={isSubmitting}
-                        {...register("name", {
-                          onBlur: (e) => {
-                            e.target.value = e.target.value.trim().replace(/\s+/g, " ");
-                          }
-                        })}
-                        className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                      />
-                    </div>
-                    {errors.name && (
-                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
-                        {errors.name.message}
-                      </p>
-                    )}
-                  </div>
+          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-2.5">
+            {/* Full Name */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  disabled={isSubmitting}
+                  {...register("name", {
+                    onBlur: (e) => {
+                      e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                    }
+                  })}
+                  className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                />
+              </div>
+              {errors.name && <p className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.name.message}</p>}
+            </div>
 
-                  <div>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                      <input
-                        type="email"
-                        placeholder="Email"
-                        disabled={isSubmitting}
-                        {...register("email", {
-                          onBlur: (e) => {
-                            e.target.value = e.target.value.trim();
-                          }
-                        })}
-                        className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                      />
-                    </div>
-                    {errors.email && (
-                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
+            {/* Email Address */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  disabled={isSubmitting}
+                  {...register("email", {
+                    onBlur: (e) => {
+                      e.target.value = e.target.value.trim();
+                    }
+                  })}
+                  className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                />
+              </div>
+              {errors.email && <p className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.email.message}</p>}
+            </div>
 
-                {/* Grid for Phone and Center */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                      <input
-                        type="tel"
-                        placeholder="Phone"
-                        maxLength={10}
-                        disabled={isSubmitting}
-                        {...register("phone", {
-                          onChange: (e) => {
-                            e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-                          }
-                        })}
-                        className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                      />
-                    </div>
-                    {errors.phone && (
-                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
-                        {errors.phone.message}
-                      </p>
-                    )}
-                  </div>
+            {/* Contact Number */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  maxLength={10}
+                  disabled={isSubmitting}
+                  {...register("phone", {
+                    onChange: (e) => {
+                      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    }
+                  })}
+                  className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                />
+              </div>
+              {errors.phone && <p className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.phone.message}</p>}
+            </div>
 
-                  <div>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                      <select
-                        {...register("center")}
-                        disabled={isSubmitting}
-                        className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                      >
-                        <option value="">Center..</option>
-                        {CENTERS.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.center && (
-                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
-                        {errors.center.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Full Name */}
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    disabled={isSubmitting}
-                    {...register("name", {
-                      onBlur: (e) => {
-                        e.target.value = e.target.value.trim().replace(/\s+/g, " ");
-                      }
-                    })}
-                    className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                  />
-                </div>
-                {errors.name && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.name.message}</p>}
-
-                {/* Email Address */}
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    disabled={isSubmitting}
-                    {...register("email", {
-                      onBlur: (e) => {
-                        e.target.value = e.target.value.trim();
-                      }
-                    })}
-                    className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                  />
-                </div>
-                {errors.email && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.email.message}</p>}
-
-                {/* Contact Number */}
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                  <input
-                    type="tel"
-                    placeholder="Phone Number"
-                    maxLength={10}
-                    disabled={isSubmitting}
-                    {...register("phone", {
-                      onChange: (e) => {
-                        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-                      }
-                    })}
-                    className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                  />
-                </div>
-                {errors.phone && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.phone.message}</p>}
-
-                {/* Choose Center */}
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-                  <select
-                    {...register("center")}
-                    disabled={isSubmitting}
-                    className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-                  >
-                    <option value="">Choose Center Near You..</option>
-                    {CENTERS.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-                {errors.center && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.center.message}</p>}
-              </>
-            )}
+            {/* Choose Center */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                <select
+                  {...register("center")}
+                  disabled={isSubmitting}
+                  className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                >
+                  <option value="">Choose Center Near You..</option>
+                  {CENTERS.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              {errors.center && <p className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.center.message}</p>}
+            </div>
 
             {/* Spam Protection - Custom math CAPTCHA */}
             <CustomCaptcha
@@ -367,15 +274,15 @@ export const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
-          className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[310px] lg:w-[330px] xl:w-[350px] z-20"
+          className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[280px] lg:w-[300px] xl:w-[320px] z-20"
         >
-          {renderForm(desktopForm, onDesktopSubmit, desktopRecaptchaRef, "hero-desktop-captcha", true)}
+          {renderForm(desktopForm, onDesktopSubmit, desktopRecaptchaRef, "hero-desktop-captcha")}
         </motion.div>
       </div>
 
       {/* Mobile Form Display (Stacked Below Banner) */}
       <div className="block lg:hidden px-4 -mt-8 max-w-md mx-auto relative z-10">
-        {renderForm(mobileForm, onMobileSubmit, mobileRecaptchaRef, "hero-mobile-captcha", false)}
+        {renderForm(mobileForm, onMobileSubmit, mobileRecaptchaRef, "hero-mobile-captcha")}
       </div>
 
       {/* Centered Content Below Banner */}

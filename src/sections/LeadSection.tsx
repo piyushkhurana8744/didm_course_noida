@@ -288,15 +288,16 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                  </div>
 
                 {/* Spam Protection - Custom math CAPTCHA */}
-                <CustomCaptcha
-                  ref={recaptchaRef}
-                  id="lead-section-captcha"
-                  error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
-                  onChange={(val) => {
-                    setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
-                    setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
-                  }}
-                />
+                 <CustomCaptcha
+                   ref={recaptchaRef}
+                   id="lead-section-captcha"
+                   size="sm"
+                   error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+                   onChange={(val) => {
+                     setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+                     setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                   }}
+                 />
 
                 {/* Privacy Guarantee */}
                 <div className="flex items-center gap-2 py-1 text-left">

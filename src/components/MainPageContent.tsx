@@ -442,6 +442,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           <CustomCaptcha
             ref={demoRecaptchaRef}
             id="modal-demo-captcha"
+            size="sm"
             error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
             onChange={(val) => {
               setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
@@ -553,6 +554,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           <CustomCaptcha
             ref={brochureRecaptchaRef}
             id="modal-brochure-captcha"
+            size="sm"
             onChange={(val) => setBrochureToken(val)}
           />
 

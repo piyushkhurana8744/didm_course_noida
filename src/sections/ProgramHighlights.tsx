@@ -422,6 +422,7 @@ export const ProgramHighlights = () => {
                     <CustomCaptcha
                       ref={recaptchaRef}
                       id="highlights-captcha"
+                      size="sm"
                       error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
                       onChange={(val) => {
                         setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });

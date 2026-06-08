@@ -299,6 +299,7 @@ export const VideoCounselling = () => {
                 <CustomCaptcha
                   ref={recaptchaRef}
                   id="counselling-captcha"
+                  size="sm"
                   error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
                   onChange={(val) => {
                     setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
