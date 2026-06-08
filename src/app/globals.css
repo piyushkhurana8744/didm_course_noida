@@ -38,6 +38,12 @@
   --color-brand-white: #ffffff;
   --color-brand-offwhite: #fafafa;
   
+  /* Custom dark zinc colors used across codebase */
+  --color-zinc-805: #27272a;
+  --color-zinc-850: #202024;
+  --color-zinc-855: #18181b;
+
+  
   --animate-marquee: marquee 35s linear infinite;
   --animate-marquee-reverse: marquee-reverse 35s linear infinite;
   --animate-pulse-slow: pulse-slow 8s ease-in-out infinite;

@@ -3,52 +3,54 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, Phone, Mail, ChevronDown, Play, Sparkles, Star, Quote } from "lucide-react";
-
+import { User, Phone, Mail, ChevronDown, Play, Sparkles, Quote } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
-
-// Zod Schema
-const counsellingSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  email: z.string().email("Please enter a valid email address"),
-  center: z.string().min(1, "Please select a training center"),
-});
-
-type CounsellingFormValues = z.infer<typeof counsellingSchema>;
+import { contactFormSchema, ContactFormValues } from "@/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
 
 export const VideoCounselling = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+
+  const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
+
+  React.useEffect(() => {
+    if (recaptchaResetToggle > 0) {
+      resetCustomCaptcha(recaptchaRef);
+    }
+  }, [recaptchaResetToggle]);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm<CounsellingFormValues>({
-    resolver: zodResolver(counsellingSchema),
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       phone: "",
       email: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
-  const onSubmit = async (data: CounsellingFormValues) => {
+  const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,17 +58,35 @@ export const VideoCounselling = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
+          captchaAnswer: data.captchaAnswer,
+          captchaSignature: data.captchaSignature,
           formType: "Free Counselling Request Form",
         }),
       });
-    } catch (err) {
-      console.error("Failed to shoot email lead:", err);
-    }
 
-    setIsSubmitting(false);
-    toast(`Counselling request locked! Our Noida career specialist will call you back on ${data.phone} within 15 minutes.`, "success");
-    reset();
-    router.push("/thank-you");
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      toast(`Counselling request locked! Our Noida career specialist will call you back on ${data.phone} within 15 minutes.`, "success");
+      reset({
+        name: "",
+        phone: "",
+        email: "",
+        center: "Noida",
+        captchaAnswer: "",
+        captchaSignature: "",
+      });
+      setRecaptchaResetToggle(prev => prev + 1);
+      router.push("/thank-you");
+    } catch (err: unknown) {
+      console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,7 +98,7 @@ export const VideoCounselling = () => {
           <span className="text-xs font-black text-brand-red uppercase tracking-widest flex items-center justify-center gap-1.5">
             <Sparkles className="h-4 w-4" /> Career Guidance & Success
           </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-zinc-850 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-black text-zinc-855 tracking-tight">
             Transforming Ambitions into <span className="text-brand-red">Digital Careers</span>
           </h2>
           <p className="text-sm sm:text-base text-zinc-500 font-medium">
@@ -147,8 +167,8 @@ export const VideoCounselling = () => {
                 {/* Blockquote Quote text */}
                 <div className="relative">
                   <Quote className="h-8 w-8 text-red-500/10 absolute -top-4.5 -left-2.5 rotate-180" />
-                  <p className="text-zinc-700 text-sm sm:text-base font-semibold leading-relaxed relative z-10 italic pl-5">
-                    "From ₹10k to ₹25k in Just 2 Months: SEO Tips for Beginners | Industry Insights | #didmpodcast 😍"
+                  <p className="text-zinc-700 text-sm sm:text-base font-semibold leading-relaxed relative z-10 italic pl-5 text-balance">
+                    {"\"From ₹10k to ₹25k in Just 2 Months: SEO Tips for Beginners | Industry Insights | #didmpodcast 😍\""}
                   </p>
                 </div>
 
@@ -196,7 +216,11 @@ export const VideoCounselling = () => {
                       type="text"
                       placeholder="Full Name"
                       disabled={isSubmitting}
-                      {...register("name")}
+                      {...register("name", {
+                        onBlur: (e) => {
+                          e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                        }
+                      })}
                       className={`w-full bg-white border rounded-lg py-3 px-4 pr-10 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                         errors.name ? "border-amber-400" : "border-transparent"
                       }`}
@@ -235,7 +259,11 @@ export const VideoCounselling = () => {
                       type="email"
                       placeholder="Email"
                       disabled={isSubmitting}
-                      {...register("email")}
+                      {...register("email", {
+                        onBlur: (e) => {
+                          e.target.value = e.target.value.trim();
+                        }
+                      })}
                       className={`w-full bg-white border rounded-lg py-3 px-4 pr-10 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-white/20 ${
                         errors.email ? "border-amber-400" : "border-transparent"
                       }`}
@@ -267,7 +295,16 @@ export const VideoCounselling = () => {
                   {errors.center && <span className="text-xs text-amber-300 font-bold">{errors.center.message}</span>}
                 </div>
 
-
+                {/* Spam Protection - Custom math CAPTCHA */}
+                <CustomCaptcha
+                  ref={recaptchaRef}
+                  id="counselling-captcha"
+                  error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+                  onChange={(val) => {
+                    setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+                    setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                  }}
+                />
 
                 {/* Submit button */}
                 <Button

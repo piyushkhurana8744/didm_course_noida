@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
@@ -23,49 +22,52 @@ import {
   BookOpen, 
   Briefcase, 
   ChevronRight,
-  ShieldAlert,
   Flame,
   CheckCircle2
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
-
-// Form Schema validation
-const workshopSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  email: z.string().email("Please enter a valid email address"),
-  center: z.string().min(1, "Please select a training center"),
-});
-
-type WorkshopFormValues = z.infer<typeof workshopSchema>;
+import { contactFormSchema, ContactFormValues } from "@/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
 
 export const ProgramHighlights = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
+  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+
+  const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
+
+  React.useEffect(() => {
+    if (recaptchaResetToggle > 0) {
+      resetCustomCaptcha(recaptchaRef);
+    }
+  }, [recaptchaResetToggle]);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm<WorkshopFormValues>({
-    resolver: zodResolver(workshopSchema),
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       phone: "",
       email: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
-  const onSubmitInquiry = async (data: WorkshopFormValues) => {
+  const onSubmitInquiry = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -73,24 +75,44 @@ export const ProgramHighlights = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
+          captchaAnswer: data.captchaAnswer,
+          captchaSignature: data.captchaSignature,
           formType: "Download Brochure Form",
         }),
       });
-    } catch (err) {
-      console.error("Failed to shoot email lead:", err);
-    }
 
-    setIsSubmitting(false);
-    toast("Syllabus brochure generated! Download starting automatically.", "success");
-    // Trigger file download
-    const link = document.createElement("a");
-    link.href = "/E-brochure (5).pdf";
-    link.download = "E-brochure (5).pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    reset();
-    router.push("/thank-you");
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      toast("Syllabus brochure generated! Download starting automatically.", "success");
+      
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = "/E-brochure (5).pdf";
+      link.download = "E-brochure (5).pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      reset({
+        name: "",
+        phone: "",
+        email: "",
+        center: "Noida",
+        captchaAnswer: "",
+        captchaSignature: "",
+      });
+      setRecaptchaResetToggle(prev => prev + 1);
+      router.push("/thank-you");
+    } catch (err: unknown) {
+      console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const featureItems = [
@@ -213,7 +235,7 @@ export const ProgramHighlights = () => {
           <div className="grid lg:grid-cols-12 gap-8 items-stretch">
             
             {/* Column A: Interactive Feature Tabs */}
-            <div className="lg:col-span-4 flex flex-col gap-2.5">
+            <div className="lg:col-span-4 flex flex-col gap-2.5 h-full">
               {featureItems.map((item, idx) => {
                 const Icon = item.icon;
                 const isActive = activeTab === idx;
@@ -222,10 +244,10 @@ export const ProgramHighlights = () => {
                   <button
                     key={idx}
                     onClick={() => setActiveTab(idx)}
-                    className={`w-full flex items-center gap-4 border rounded-xl p-3.5 text-left transition-all duration-300 cursor-pointer shadow-xs ${
+                    className={`w-full flex items-center gap-4 border rounded-xl p-3.5 text-left transition-all duration-300 cursor-pointer shadow-xs lg:flex-1 ${
                       isActive 
                         ? "bg-gradient-to-r from-brand-red to-red-600 border-brand-red text-white shadow-lg shadow-brand-red/15 scale-[1.02]" 
-                        : "bg-white border-zinc-200 text-zinc-850 hover:bg-zinc-50 hover:border-zinc-300"
+                        : "bg-white border-zinc-200 text-zinc-855 hover:bg-zinc-50 hover:border-zinc-300"
                     }`}
                   >
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
@@ -294,9 +316,7 @@ export const ProgramHighlights = () => {
                   </AnimatePresence>
                 </div>
               </Card>
-            </div>
-
-            {/* Column C: Workshop Booking Card */}
+            </div>            {/* Column C: Workshop Booking Card */}
             <div className="lg:col-span-4 h-full">
               <Card className="border-zinc-200 shadow-sm p-6 sm:p-8 h-full flex flex-col justify-between bg-white text-left">
                 
@@ -320,7 +340,11 @@ export const ProgramHighlights = () => {
                           type="text"
                           placeholder="Full Name"
                           disabled={isSubmitting}
-                          {...register("name")}
+                          {...register("name", {
+                            onBlur: (e) => {
+                              e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                            }
+                          })}
                           className={`w-full bg-zinc-50 border rounded-xl py-3.5 pl-10 pr-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                             errors.name ? "border-red-500" : "border-zinc-300"
                           }`}
@@ -359,7 +383,11 @@ export const ProgramHighlights = () => {
                           type="email"
                           placeholder="Email"
                           disabled={isSubmitting}
-                          {...register("email")}
+                          {...register("email", {
+                            onBlur: (e) => {
+                              e.target.value = e.target.value.trim();
+                            }
+                          })}
                           className={`w-full bg-zinc-50 border rounded-xl py-3.5 pl-10 pr-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                             errors.email ? "border-red-500" : "border-zinc-300"
                           }`}
@@ -390,7 +418,16 @@ export const ProgramHighlights = () => {
                       {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
                     </div>
 
-
+                    {/* Spam Protection - Custom math CAPTCHA */}
+                    <CustomCaptcha
+                      ref={recaptchaRef}
+                      id="highlights-captcha"
+                      error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+                      onChange={(val) => {
+                        setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+                        setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                      }}
+                    />
 
                     {/* Submit Button */}
                     <Button

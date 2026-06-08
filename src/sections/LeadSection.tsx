@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/toast";
 import { Card } from "@/components/ui/card";
@@ -11,16 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Play, Sparkles, ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
-
-// Zod Schema
-const inquirySchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  center: z.string().min(1, "Please select a training center"),
-});
-
-type InquiryFormValues = z.infer<typeof inquirySchema>;
+import { contactFormSchema, ContactFormValues } from "@/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
 
 interface LeadSectionProps {
   onOpenVideo: () => void;
@@ -30,27 +21,39 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+
+  const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
+
+  React.useEffect(() => {
+    if (recaptchaResetToggle > 0) {
+      resetCustomCaptcha(recaptchaRef);
+    }
+  }, [recaptchaResetToggle]);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
-  } = useForm<InquiryFormValues>({
-    resolver: zodResolver(inquirySchema),
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
-  const onSubmit = async (data: InquiryFormValues) => {
+  const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -58,26 +61,38 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
           email: data.email,
           phone: data.phone,
           center: data.center,
+          captchaAnswer: data.captchaAnswer,
+          captchaSignature: data.captchaSignature,
           formType: "Lead Section Form",
         }),
       });
-    } catch (err) {
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      toast(
+        `Thank you, ${data.name}! Your free demo class seat is reserved at our ${data.center} center. We will call you shortly on ${data.phone}.`,
+        "success"
+      );
+      reset({
+        name: "",
+        email: "",
+        phone: "",
+        center: "Noida",
+        captchaAnswer: "",
+        captchaSignature: "",
+      });
+      setRecaptchaResetToggle(prev => prev + 1);
+      router.push("/thank-you");
+    } catch (err: unknown) {
       console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
-
-    toast(
-      `Thank you, ${data.name}! Your free demo class seat is reserved at our ${data.center} center. We will call you shortly on ${data.phone}.`,
-      "success"
-    );
-    reset({
-      name: "",
-      email: "",
-      phone: "",
-      center: "Noida",
-    });
-    router.push("/thank-you");
   };
 
   return (
@@ -177,7 +192,11 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                       id="name"
                       type="text"
                       placeholder="e.g. Rahul Sharma"
-                      {...register("name")}
+                      {...register("name", {
+                        onBlur: (e) => {
+                          e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                        }
+                      })}
                       disabled={isSubmitting}
                       className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all ${
                         errors.name ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
@@ -198,10 +217,14 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                     id="email"
                     type="email"
                     placeholder="e.g. rahul@gmail.com"
-                    {...register("email")}
+                    {...register("email", {
+                      onBlur: (e) => {
+                        e.target.value = e.target.value.trim();
+                      }
+                    })}
                     disabled={isSubmitting}
                     className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all ${
-                      errors.email ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
+                      errors.email ? "border-red-500" : "border-zinc-300"
                     }`}
                   />
                   {errors.email && (
@@ -230,7 +253,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                       })}
                       disabled={isSubmitting}
                       className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all ${
-                        errors.phone ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
+                        errors.phone ? "border-red-500" : "border-zinc-300"
                       }`}
                     />
                   </div>
@@ -249,7 +272,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                      {...register("center")}
                      disabled={isSubmitting}
                      className={`w-full bg-white border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/20 transition-all cursor-pointer ${
-                       errors.center ? "border-red-500" : "border-zinc-300 focus:border-brand-red"
+                       errors.center ? "border-red-500" : "border-zinc-300"
                      }`}
                    >
                      <option value="" className="bg-white text-zinc-800">Choose Center Near You..</option>
@@ -263,6 +286,17 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                      <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>
                    )}
                  </div>
+
+                {/* Spam Protection - Custom math CAPTCHA */}
+                <CustomCaptcha
+                  ref={recaptchaRef}
+                  id="lead-section-captcha"
+                  error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+                  onChange={(val) => {
+                    setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+                    setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                  }}
+                />
 
                 {/* Privacy Guarantee */}
                 <div className="flex items-center gap-2 py-1 text-left">
@@ -278,7 +312,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                   size="lg"
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 shadow-lg shadow-brand-red/10"
+                  className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 shadow-lg shadow-brand-red/10 font-bold"
                 >
                   {isSubmitting ? (
                     <>

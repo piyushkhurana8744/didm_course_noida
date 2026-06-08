@@ -24,20 +24,18 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
 import { CENTERS } from "@/data/content";
-
-// Modal lead schema
-const modalSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  center: z.string().min(1, "Please select a center near you"),
-});
-
-type ModalFormValues = z.infer<typeof modalSchema>;
+import { 
+  contactFormSchema, 
+  ContactFormValues, 
+  nameSchema, 
+  emailSchema, 
+  phoneSchema, 
+  centerSchema 
+} from "@/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
 
 interface MainPageContentProps {
   showPricing: boolean;
@@ -96,20 +94,42 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
   const [selectedCourse, setSelectedCourse] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  // Form hooks for modal
+  // Custom CAPTCHA references and state
+  const demoRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const brochureRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const [brochureToken, setBrochureToken] = React.useState<{ answer: string; signature: string } | null>(null);
+
+  const [demoResetToggle, setDemoResetToggle] = React.useState(0);
+  const [brochureResetToggle, setBrochureResetToggle] = React.useState(0);
+
+  React.useEffect(() => {
+    if (demoResetToggle > 0) {
+      resetCustomCaptcha(demoRecaptchaRef);
+    }
+  }, [demoResetToggle]);
+
+  React.useEffect(() => {
+    if (brochureResetToggle > 0) {
+      resetCustomCaptcha(brochureRecaptchaRef);
+    }
+  }, [brochureResetToggle]);
+
+  // Form hooks for modal (Demo Booking)
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     formState: { errors },
-  } = useForm<ModalFormValues>({
-    resolver: zodResolver(modalSchema),
+  } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
@@ -124,11 +144,11 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     setIsDemoOpen(true);
   };
 
-  const handleDemoSubmit = async (data: ModalFormValues) => {
+  const handleDemoSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -136,81 +156,125 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           email: data.email,
           phone: data.phone,
           center: data.center,
+          captchaAnswer: data.captchaAnswer,
+          captchaSignature: data.captchaSignature,
           formType: "DIDM Noida Adword Form 2",
         }),
       });
-    } catch (err) {
-      console.error("Failed to shoot email lead:", err);
-    }
 
-    setIsSubmitting(false);
-    setIsDemoOpen(false);
-    
-    toast(`Thank you, ${data.name}! Your seats for the free trial class are locked at our ${data.center} center. Check your email for details.`, "success");
-    reset({
-      name: "",
-      email: "",
-      phone: "",
-      center: "Noida",
-    });
-    router.push("/thank-you");
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      setIsDemoOpen(false);
+      toast(`Thank you, ${data.name}! Your seats for the free trial class are locked at our ${data.center} center. Check your email for details.`, "success");
+      reset({
+        name: "",
+        email: "",
+        phone: "",
+        center: "Noida",
+        captchaAnswer: "",
+        captchaSignature: "",
+      });
+      setDemoResetToggle(prev => prev + 1);
+      router.push("/thank-you");
+    } catch (err: unknown) {
+      console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleBrochureSubmit = async (e: React.FormEvent) => {
+  const handleBrochureSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const target = e.currentTarget;
+    const formData = new FormData(target);
     const name = formData.get("brochure-name");
     const email = formData.get("brochure-email");
     const phone = formData.get("brochure-phone");
     const center = formData.get("brochure-center");
 
-    if (!name || !email || !phone || !center) {
-      toast("Please fill all fields to download the brochure.", "error");
+    // Perform individual schema validations for standard form
+    const nameResult = nameSchema.safeParse(name);
+    if (!nameResult.success) {
+      toast(nameResult.error.issues[0].message, "error");
       return;
     }
+    const sanitizedName = nameResult.data;
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (typeof email !== "string" || !emailRegex.test(email)) {
-      toast("Please enter a valid email address.", "error");
+    const emailResult = emailSchema.safeParse(email);
+    if (!emailResult.success) {
+      toast(emailResult.error.issues[0].message, "error");
       return;
     }
+    const sanitizedEmail = emailResult.data;
 
-    const phoneRegex = /^\d{10}$/;
-    if (typeof phone !== "string" || !phoneRegex.test(phone)) {
-      toast("Phone number must be exactly 10 digits containing only numbers.", "error");
+    const phoneResult = phoneSchema.safeParse(phone);
+    if (!phoneResult.success) {
+      toast(phoneResult.error.issues[0].message, "error");
+      return;
+    }
+    const sanitizedPhone = phoneResult.data;
+
+    const centerResult = centerSchema.safeParse(center);
+    if (!centerResult.success) {
+      toast(centerResult.error.issues[0].message, "error");
+      return;
+    }
+    const sanitizedCenter = centerResult.data;
+
+    if (!brochureToken) {
+      toast("Please solve the math challenge to prove you are human.", "error");
       return;
     }
 
     setIsSubmitting(true);
     
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          phone,
-          center,
+          name: sanitizedName,
+          email: sanitizedEmail,
+          phone: sanitizedPhone,
+          center: sanitizedCenter,
+          captchaAnswer: brochureToken.answer,
+          captchaSignature: brochureToken.signature,
           formType: "Brochure Download Form",
         }),
       });
-    } catch (err) {
-      console.error("Failed to shoot email lead:", err);
-    }
 
-    setIsSubmitting(false);
-    setIsBrochureOpen(false);
-    
-    toast(`Syllabus brochure generated for ${center} center! Download starting automatically for ${email}.`, "success");
-    // Trigger file download
-    const link = document.createElement("a");
-    link.href = "/E-brochure (5).pdf";
-    link.download = "E-brochure (5).pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    router.push("/thank-you");
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      setIsBrochureOpen(false);
+      toast(`Syllabus brochure generated for ${sanitizedCenter} center! Download starting automatically for ${sanitizedEmail}.`, "success");
+      
+      // Trigger file download
+      const link = document.createElement("a");
+      link.href = "/E-brochure (5).pdf";
+      link.download = "E-brochure (5).pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      target.reset();
+      setBrochureToken(null);
+      setBrochureResetToggle(prev => prev + 1);
+      router.push("/thank-you");
+    } catch (err: unknown) {
+      console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -299,9 +363,13 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             <input
               type="text"
               placeholder="e.g. Rahul Sharma"
-              {...register("name")}
+              {...register("name", {
+                onBlur: (e) => {
+                  e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                }
+              })}
               disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                 errors.name ? "border-red-500" : "border-zinc-300"
               }`}
             />
@@ -315,9 +383,13 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             <input
               type="email"
               placeholder="e.g. rahul@gmail.com"
-              {...register("email")}
+              {...register("email", {
+                onBlur: (e) => {
+                  e.target.value = e.target.value.trim();
+                }
+              })}
               disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                 errors.email ? "border-red-500" : "border-zinc-300"
               }`}
             />
@@ -338,7 +410,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
                 }
               })}
               disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
                 errors.phone ? "border-red-500" : "border-zinc-300"
               }`}
             />
@@ -352,7 +424,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             <select
               {...register("center")}
               disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer ${
+              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer ${
                 errors.center ? "border-red-500" : "border-zinc-300"
               }`}
             >
@@ -366,6 +438,17 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
           </div>
 
+          {/* Spam Protection - Custom math CAPTCHA */}
+          <CustomCaptcha
+            ref={demoRecaptchaRef}
+            id="modal-demo-captcha"
+            error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+            onChange={(val) => {
+              setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+              setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+            }}
+          />
+
           <div className="flex items-center gap-2 py-1">
             <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
             <span className="text-[10px] text-zinc-500 font-bold">
@@ -373,7 +456,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             </span>
           </div>
 
-          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-2 cursor-pointer">
+          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-2 cursor-pointer font-bold">
             {isSubmitting ? "Locking Seat..." : "Confirm Free Class Booking"}
           </Button>
         </form>
@@ -386,7 +469,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
         title="Download Course Brochure"
       >
         <form onSubmit={handleBrochureSubmit} className="space-y-4 text-left">
-          <p className="text-xs text-zinc-600 mb-2 leading-relaxed font-medium">
+          <p className="text-xs text-zinc-655 mb-2 leading-relaxed font-medium">
             Enter your details below to receive the complete 2026 digital marketing curriculum PDF file directly on your device.
           </p>
 
@@ -400,8 +483,11 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
               type="text"
               required
               placeholder="e.g. Rahul Sharma"
+              onBlur={(e) => {
+                e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+              }}
               disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
             />
           </div>
 
@@ -415,8 +501,11 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
               type="email"
               required
               placeholder="e.g. rahul@gmail.com"
+              onBlur={(e) => {
+                e.target.value = e.target.value.trim();
+              }}
               disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
             />
           </div>
 
@@ -436,7 +525,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
               }}
               placeholder="98765 43210"
               disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
             />
           </div>
 
@@ -449,7 +538,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
               name="brochure-center"
               required
               disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-850 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer"
+              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer"
             >
               <option value="">Choose Center Near You..</option>
               {CENTERS.map((c) => (
@@ -460,7 +549,14 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             </select>
           </div>
 
-          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-4 cursor-pointer">
+          {/* Spam Protection - Custom math CAPTCHA */}
+          <CustomCaptcha
+            ref={brochureRecaptchaRef}
+            id="modal-brochure-captcha"
+            onChange={(val) => setBrochureToken(val)}
+          />
+
+          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-4 cursor-pointer font-bold">
             {isSubmitting ? "Generating PDF..." : "Download Free Brochure Now"}
           </Button>
         </form>

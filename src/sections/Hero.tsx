@@ -4,51 +4,67 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/toast";
 import { User, Mail, Phone, MapPin, GraduationCap, ArrowRight } from "lucide-react";
 import { CENTERS } from "@/data/content";
-
-// Zod Schema
-const heroSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  center: z.string().min(1, "Please select a training center"),
-});
-
-type HeroFormValues = z.infer<typeof heroSchema>;
+import { contactFormSchema, ContactFormValues } from "@/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
 
 export const Hero = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const desktopForm = useForm<HeroFormValues>({
-    resolver: zodResolver(heroSchema),
+  const desktopRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const mobileRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
+
+  const [desktopResetToggle, setDesktopResetToggle] = React.useState(0);
+  const [mobileResetToggle, setMobileResetToggle] = React.useState(0);
+
+  React.useEffect(() => {
+    if (desktopResetToggle > 0) {
+      resetCustomCaptcha(desktopRecaptchaRef);
+    }
+  }, [desktopResetToggle]);
+
+  React.useEffect(() => {
+    if (mobileResetToggle > 0) {
+      resetCustomCaptcha(mobileRecaptchaRef);
+    }
+  }, [mobileResetToggle]);
+
+  const desktopForm = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
-  const mobileForm = useForm<HeroFormValues>({
-    resolver: zodResolver(heroSchema),
+  const mobileForm = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       center: "Noida",
+      captchaAnswer: "",
+      captchaSignature: "",
     },
   });
 
-  const createSubmitHandler = (resetFn: any) => async (data: HeroFormValues) => {
+  const createSubmitHandler = (
+    formInstance: typeof desktopForm,
+    triggerReset: () => void
+  ) => async (data: ContactFormValues) => {
     setIsSubmitting(true);
     try {
-      await fetch("/api/send-email", {
+      const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,37 +72,60 @@ export const Hero = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
+          captchaAnswer: data.captchaAnswer,
+          captchaSignature: data.captchaSignature,
           formType: "DIDM Noida Adword Form 1",
         }),
       });
-    } catch (err) {
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData.error || "Failed to submit form");
+      }
+
+      toast(`Thank you, ${data.name}! Your free trial class is reserved at our ${data.center} center.`, "success");
+      formInstance.reset({
+        name: "",
+        email: "",
+        phone: "",
+        center: "Noida",
+        captchaAnswer: "",
+        captchaSignature: "",
+      });
+      triggerReset();
+      router.push("/thank-you");
+    } catch (err: unknown) {
       console.error("Failed to shoot email lead:", err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      toast(errorMessage, "error");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
-    toast(`Thank you, ${data.name}! Your free trial class is reserved at our ${data.center} center.`, "success");
-    resetFn({ name: "", email: "", phone: "", center: "Noida" });
-    router.push("/thank-you");
   };
 
-  const onDesktopSubmit = createSubmitHandler(desktopForm.reset);
-  const onMobileSubmit = createSubmitHandler(mobileForm.reset);
+  const onDesktopSubmit = createSubmitHandler(desktopForm, () => setDesktopResetToggle(prev => prev + 1));
+  const onMobileSubmit = createSubmitHandler(mobileForm, () => setMobileResetToggle(prev => prev + 1));
 
-  const inputBase = "w-full border rounded-lg py-2 pl-9 pr-3 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/25 focus:border-brand-red transition-all";
+  const inputBase = "w-full border rounded-lg py-1.5 pl-9 pr-3 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-brand-red/25 focus:border-brand-red transition-all";
 
   const renderForm = (
     formInstance: typeof desktopForm,
-    onSubmitHandler: (data: HeroFormValues) => void
+    onSubmitHandler: (data: ContactFormValues) => void,
+    recaptchaRef: React.RefObject<CustomCaptchaRef | null>,
+    captchaId: string,
+    isDesktop: boolean
   ) => {
     const {
       register,
       handleSubmit,
+      setValue,
       formState: { errors },
     } = formInstance;
 
     return (
       <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] border border-white/25">
         {/* Branded Red Header */}
-        <div className="bg-gradient-to-r from-brand-red/85 via-red-600/85 to-red-700/85 backdrop-blur-md px-4 py-2.5 text-white flex items-center justify-between">
+        <div className="bg-gradient-to-r from-brand-red/85 via-red-600/85 to-red-700/85 backdrop-blur-md px-4 py-2 text-white flex items-center justify-between">
           <h3 className="text-[12px] font-extrabold tracking-tight uppercase flex items-center gap-1.5">
             <GraduationCap className="h-4.5 w-4.5 shrink-0 text-white" />
             Book Free Demo
@@ -97,67 +136,187 @@ export const Hero = () => {
         </div>
 
         {/* Form Body */}
-        <div className="bg-white/75 backdrop-blur-md p-4">
-          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-2.5">
-            {/* Full Name */}
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-              <input
-                type="text"
-                placeholder="Full Name"
-                disabled={isSubmitting}
-                {...register("name")}
-                className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-              />
-            </div>
-            {errors.name && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.name.message}</p>}
+        <div className="bg-white/75 backdrop-blur-md p-3.5">
+          <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-2">
+            {isDesktop ? (
+              <>
+                {/* Grid for Name and Email */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                      <input
+                        type="text"
+                        placeholder="Name"
+                        disabled={isSubmitting}
+                        {...register("name", {
+                          onBlur: (e) => {
+                            e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                          }
+                        })}
+                        className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                      />
+                    </div>
+                    {errors.name && (
+                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
+                        {errors.name.message}
+                      </p>
+                    )}
+                  </div>
 
-            {/* Email Address */}
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-              <input
-                type="email"
-                placeholder="Email Address"
-                disabled={isSubmitting}
-                {...register("email")}
-                className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-              />
-            </div>
-            {errors.email && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.email.message}</p>}
+                  <div>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        disabled={isSubmitting}
+                        {...register("email", {
+                          onBlur: (e) => {
+                            e.target.value = e.target.value.trim();
+                          }
+                        })}
+                        className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-            {/* Contact Number */}
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                maxLength={10}
-                disabled={isSubmitting}
-                {...register("phone", {
-                  onChange: (e) => {
-                    e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-                  }
-                })}
-                className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-              />
-            </div>
-            {errors.phone && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.phone.message}</p>}
+                {/* Grid for Phone and Center */}
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                      <input
+                        type="tel"
+                        placeholder="Phone"
+                        maxLength={10}
+                        disabled={isSubmitting}
+                        {...register("phone", {
+                          onChange: (e) => {
+                            e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                          }
+                        })}
+                        className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                      />
+                    </div>
+                    {errors.phone && (
+                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
 
-            {/* Choose Center */}
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
-              <select
-                {...register("center")}
-                disabled={isSubmitting}
-                className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
-              >
-                <option value="">Choose Center Near You..</option>
-                {CENTERS.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            {errors.center && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.center.message}</p>}
+                  <div>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                      <select
+                        {...register("center")}
+                        disabled={isSubmitting}
+                        className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                      >
+                        <option value="">Center..</option>
+                        {CENTERS.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {errors.center && (
+                      <p className="text-[9px] text-red-500 font-semibold mt-0.5 pl-1 leading-tight">
+                        {errors.center.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Full Name */}
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    disabled={isSubmitting}
+                    {...register("name", {
+                      onBlur: (e) => {
+                        e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                      }
+                    })}
+                    className={`${inputBase} ${errors.name ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                  />
+                </div>
+                {errors.name && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.name.message}</p>}
+
+                {/* Email Address */}
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    disabled={isSubmitting}
+                    {...register("email", {
+                      onBlur: (e) => {
+                        e.target.value = e.target.value.trim();
+                      }
+                    })}
+                    className={`${inputBase} ${errors.email ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                  />
+                </div>
+                {errors.email && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.email.message}</p>}
+
+                {/* Contact Number */}
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                  <input
+                    type="tel"
+                    placeholder="Phone Number"
+                    maxLength={10}
+                    disabled={isSubmitting}
+                    {...register("phone", {
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                      }
+                    })}
+                    className={`${inputBase} ${errors.phone ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                  />
+                </div>
+                {errors.phone && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.phone.message}</p>}
+
+                {/* Choose Center */}
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400" />
+                  <select
+                    {...register("center")}
+                    disabled={isSubmitting}
+                    className={`${inputBase} cursor-pointer appearance-none ${errors.center ? "border-red-400 bg-red-50/50" : "border-zinc-200 bg-zinc-50/80"}`}
+                  >
+                    <option value="">Choose Center Near You..</option>
+                    {CENTERS.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+                {errors.center && <p className="text-[10px] text-red-500 font-semibold -mt-1 pl-1">{errors.center.message}</p>}
+              </>
+            )}
+
+            {/* Spam Protection - Custom math CAPTCHA */}
+            <CustomCaptcha
+              ref={recaptchaRef}
+              id={captchaId}
+              size="sm"
+              error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
+              onChange={(val) => {
+                setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
+                setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+              }}
+            />
 
             {/* Submit Button */}
             <button
@@ -193,32 +352,30 @@ export const Hero = () => {
 
       {/* Edge-to-Edge Full-Width Banner Image Wrapper */}
       <div className="w-full relative">
-        <div className="relative overflow-hidden w-full">
-          <img
-            src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1920/v1779780068/hero-banner_p0nzip.webp"
-            alt="DIDM Noida Branch Banner"
-            width={1200}
-            height={675}
-            className="w-full h-auto block"
-          />
-          {/* Right-side gradient for form readability */}
-          <div className="absolute inset-0 bg-gradient-to-l from-black/20 via-transparent to-transparent pointer-events-none hidden lg:block" />
+        <img
+          src="https://res.cloudinary.com/dnfz4jwam/image/upload/f_auto,q_auto,w_1920/v1779780068/hero-banner_p0nzip.webp"
+          alt="DIDM Noida Branch Banner"
+          width={1200}
+          height={675}
+          className="w-full h-auto block"
+        />
+        {/* Right-side gradient for form readability */}
+        <div className="absolute inset-0 bg-gradient-to-l from-black/20 via-transparent to-transparent pointer-events-none hidden lg:block" />
 
-          {/* Desktop Overlay Form - positioned on right side */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[250px] lg:w-[280px] z-20"
-          >
-            {renderForm(desktopForm, onDesktopSubmit)}
-          </motion.div>
-        </div>
+        {/* Desktop Overlay Form - positioned on right side */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
+          className="hidden lg:block absolute top-1/2 -translate-y-1/2 right-8 lg:right-16 xl:right-24 w-[310px] lg:w-[330px] xl:w-[350px] z-20"
+        >
+          {renderForm(desktopForm, onDesktopSubmit, desktopRecaptchaRef, "hero-desktop-captcha", true)}
+        </motion.div>
       </div>
 
       {/* Mobile Form Display (Stacked Below Banner) */}
       <div className="block lg:hidden px-4 -mt-8 max-w-md mx-auto relative z-10">
-        {renderForm(mobileForm, onMobileSubmit)}
+        {renderForm(mobileForm, onMobileSubmit, mobileRecaptchaRef, "hero-mobile-captcha", false)}
       </div>
 
       {/* Centered Content Below Banner */}
@@ -231,7 +388,7 @@ export const Hero = () => {
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-extrabold text-zinc-900 tracking-tight leading-[1.15]"
         >
-          "Digital Marketing Training Institute - <span className="text-brand-red">Noida</span>"
+          &ldquo;Digital Marketing Training Institute - <span className="text-brand-red">Noida</span>&rdquo;
         </motion.h1>
 
         {/* Description Paragraph with Red Highlights */}
