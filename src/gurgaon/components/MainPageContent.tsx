@@ -1,24 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { Header } from "@/sections/Header";
-import { Hero } from "@/sections/Hero";
-import { ProgramHighlights } from "@/sections/ProgramHighlights";
-import { VideoCounselling } from "@/sections/VideoCounselling";
-import { CourseOverview } from "@/sections/CourseOverview";
-import { CoursePrograms } from "@/sections/CoursePrograms";
-import { TrainingSchedule } from "@/sections/TrainingSchedule";
-import { CoveredModules } from "@/sections/CoveredModules";
-import { CoveredModulesTabs } from "@/sections/CoveredModulesTabs";
-import { ComparisonTable } from "@/sections/ComparisonTable";
-import { FAQ } from "@/sections/FAQ";
-import { StudentFeedback } from "@/sections/StudentFeedback";
-import { StudentsCorner } from "@/sections/StudentsCorner";
-import { StudentsHappyFaces } from "@/sections/StudentsHappyFaces";
-import { DigitalCareerStart } from "@/sections/DigitalCareerStart";
-import { ContactMap } from "@/sections/ContactMap";
-import { Footer } from "@/sections/Footer";
-import { FloatingWidgets } from "@/components/FloatingWidgets";
+import { Header } from "@/gurgaon/sections/Header";
+import { Hero } from "@/gurgaon/sections/Hero";
+import { ProgramHighlights } from "@/gurgaon/sections/ProgramHighlights";
+import { VideoCounselling } from "@/gurgaon/sections/VideoCounselling";
+import { CourseOverview } from "@/gurgaon/sections/CourseOverview";
+import { CoursePrograms } from "@/gurgaon/sections/CoursePrograms";
+import { TrainingSchedule } from "@/gurgaon/sections/TrainingSchedule";
+import { CoveredModules } from "@/gurgaon/sections/CoveredModules";
+import { CoveredModulesTabs } from "@/gurgaon/sections/CoveredModulesTabs";
+import { ComparisonTable } from "@/gurgaon/sections/ComparisonTable";
+import { FAQ } from "@/gurgaon/sections/FAQ";
+import { StudentFeedback } from "@/gurgaon/sections/StudentFeedback";
+import { StudentsCorner } from "@/gurgaon/sections/StudentsCorner";
+import { StudentsHappyFaces } from "@/gurgaon/sections/StudentsHappyFaces";
+import { DigitalCareerStart } from "@/gurgaon/sections/DigitalCareerStart";
+import { ContactMap } from "@/gurgaon/sections/ContactMap";
+import { Footer } from "@/gurgaon/sections/Footer";
+import { FloatingWidgets } from "@/gurgaon/components/FloatingWidgets";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
-import { CENTERS } from "@/data/content";
+import { CENTERS } from "@/gurgaon/data/content";
 import { 
   contactFormSchema, 
   ContactFormValues, 
@@ -34,8 +34,8 @@ import {
   emailSchema, 
   phoneSchema, 
   centerSchema 
-} from "@/utils/validation";
-import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
+} from "@/gurgaon/utils/validation";
+import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/gurgaon/components/CustomCaptcha";
 
 interface MainPageContentProps {
   showPricing: boolean;
@@ -127,7 +127,8 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       name: "",
       email: "",
       phone: "",
-      center: "Noida",
+      center: "Gurgaon",
+      agree: false,
       captchaAnswer: "",
       captchaSignature: "",
     },
@@ -140,7 +141,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       return;
     }
     setSelectedCourse(courseName || "Free Demo Class");
-    setValue("center", "Noida");
+    setValue("center", "Gurgaon");
     setIsDemoOpen(true);
   };
 
@@ -158,7 +159,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           center: data.center,
           captchaAnswer: data.captchaAnswer,
           captchaSignature: data.captchaSignature,
-          formType: "DIDM Noida Adword Form 2",
+          formType: "DIDM Gurgaon Adword Form 2",
         }),
       });
 
@@ -173,7 +174,8 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
         name: "",
         email: "",
         phone: "",
-        center: "Noida",
+        center: "Gurgaon",
+        agree: false,
         captchaAnswer: "",
         captchaSignature: "",
       });
@@ -225,6 +227,12 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       return;
     }
     const sanitizedCenter = centerResult.data;
+
+    const agree = formData.get("brochure-agree");
+    if (!agree) {
+      toast("You must agree to the DIDM Terms of Use and Privacy Policy", "error");
+      return;
+    }
 
     if (!brochureToken) {
       toast("Please solve the math challenge to prove you are human.", "error");
@@ -311,26 +319,26 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
         {/* 3. Video & Counselling Form */}
         <VideoCounselling />
 
-        {/* 7b. Noida Student Feedback Grid */}
+        {/* 7b. Gurgaon Student Feedback Grid */}
         <StudentFeedback />
 
         {/* 3b. Course Overview details */}
         <CourseOverview />
 
-        {/* 3d. Training schedule and qualifications (Noida) */}
+        {/* 3d. Training schedule and qualifications (Gurgaon) */}
         <TrainingSchedule onOpenDemo={triggerDemoModal} />
 
-        {/* 3e. 50+ Modules list covered in Noida master program */}
+        {/* 3e. 50+ Modules list covered in Gurgaon master program */}
         <CoveredModules onOpenDemo={triggerDemoModal} />
 
         {/* 3f. Interactive module details tabs (Adwords, SEO, SMM, Adsense, etc.) */}
         <CoveredModulesTabs onOpenDemo={triggerDemoModal} />
 
-        {/* 7a. Noida Branch Students Corner Carousel */}
+        {/* 7a. Gurgaon Branch Students Corner Carousel */}
         <StudentsCorner />
 
         {/* 7b. Students Happy Faces Gallery */}
-        <StudentsHappyFaces />
+        {/* <StudentsHappyFaces /> */}
 
         {/* 12. FAQ Accordions */}
         <FAQ />
@@ -438,6 +446,41 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
             {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
           </div>
 
+          {/* Agreement Checkbox */}
+          <div className="flex flex-col gap-1.5 py-1">
+            <label className="flex items-start gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                disabled={isSubmitting}
+                {...register("agree")}
+                className={`mt-0.5 rounded border border-zinc-350 text-brand-red focus:ring-brand-red/20 focus:border-brand-red ${
+                  errors.agree ? "border-red-500" : "border-zinc-300"
+                }`}
+              />
+              <span className="text-[11px] text-zinc-550 font-bold leading-tight">
+                I agree to the DIDM{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-red hover:underline"
+                >
+                  Terms of Use
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-red hover:underline"
+                >
+                  Privacy Policy
+                </a>
+              </span>
+            </label>
+            {errors.agree && <span className="text-xs text-red-500 font-semibold">{errors.agree.message}</span>}
+          </div>
+
           {/* Spam Protection - Custom math CAPTCHA */}
           <CustomCaptcha
             ref={demoRecaptchaRef}
@@ -458,7 +501,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           </div>
 
           <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-2 cursor-pointer font-bold">
-            {isSubmitting ? "Locking Seat..." : (selectedCourse === "Request Callback" ? "Request a Callback" : "Confirm Free Class Booking")}
+            {isSubmitting ? "Submitting..." : (selectedCourse === "Request Callback" ? "Request a Callback" : "Confirm Free Class Booking")}
           </Button>
         </form>
       </Dialog>
@@ -548,6 +591,39 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* Agreement Checkbox */}
+          <div className="flex flex-col gap-1.5 py-1">
+            <label className="flex items-start gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                name="brochure-agree"
+                required
+                disabled={isSubmitting}
+                className="mt-0.5 rounded border border-zinc-350 text-brand-red focus:ring-brand-red/20 focus:border-brand-red"
+              />
+              <span className="text-[11px] text-zinc-550 font-bold leading-tight">
+                I agree to the DIDM{" "}
+                <a
+                  href="/terms-and-conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-red hover:underline"
+                >
+                  Terms of Use
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-red hover:underline"
+                >
+                  Privacy Policy
+                </a>
+              </span>
+            </label>
           </div>
 
           {/* Spam Protection - Custom math CAPTCHA */}

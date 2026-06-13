@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Menu, X, CalendarRange, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useScroll } from "@/hooks/useScroll";
+import { useScroll } from "@/gurgaon/hooks/useScroll";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -17,7 +17,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
   const { isScrolled } = useScroll(20);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
-  const basePath = pathname.startsWith("/noida") ? "/noida" : "";
+  const basePath = pathname.startsWith("/gurgaon") ? "/gurgaon" : "";
 
   const navLinks = [
     { label: "Home", href: basePath || "/" },
@@ -32,7 +32,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    const isMainPage = pathname === "/" || pathname === "/noida";
+    const isMainPage = pathname === "/" || pathname === "/gurgaon";
     if (!isMainPage) {
       setMobileMenuOpen(false);
       return;
@@ -41,7 +41,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
     e.preventDefault();
     setMobileMenuOpen(false);
 
-    if (href === "#" || href === "/" || href === "/noida" || href === "") {
+    if (href === "#" || href === "/" || href === "/gurgaon" || href === "") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       window.history.pushState(null, "", href === "#" ? (basePath || "/") : href);
       return;
@@ -129,7 +129,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
               <div className="flex items-center gap-3 border-r border-zinc-200 pr-5">
                 {/* WhatsApp Link */}
                 <a
-                  href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                  href="https://wa.me/919310076503?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Gurgaon%20campus.%20Please%20share%20details."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-zinc-800 hover:text-emerald-600 transition-all duration-300 font-extrabold text-sm"
@@ -144,12 +144,12 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
                 
                 {/* Phone Call Link */}
                 <a
-                  href="tel:+919873837467"
+                  href="tel:+919310076503"
                   className="flex items-center gap-1.5 text-zinc-800 hover:text-brand-red transition-all duration-300 font-extrabold text-sm"
                   title="Call Us"
                 >
                   <Phone className="h-4 w-4 text-brand-red animate-pulse" />
-                  <span>98738 37467</span>
+                  <span>09310076503</span>
                 </a>
               </div>
               <Button
@@ -167,7 +167,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
             <div className="flex items-center gap-2.5 lg:hidden">
               {/* Phone Icon */}
               <a
-                href="tel:+919873837467"
+                href="tel:+919310076503"
                 className="p-2 text-brand-red bg-zinc-50 border border-zinc-200 rounded-lg hover:text-red-650 transition-colors"
                 title="Call Advisor"
               >
@@ -176,7 +176,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
 
               {/* WhatsApp Icon */}
               <a
-                href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                href="https://wa.me/919310076503?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Gurgaon%20campus.%20Please%20share%20details."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 text-emerald-600 bg-zinc-50 border border-zinc-200 rounded-lg hover:text-emerald-550 transition-colors"
@@ -247,14 +247,14 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
               <div className="flex flex-col gap-3 mt-8 border-t border-zinc-200 pt-6">
                 <div className="flex items-center justify-between gap-3 mb-1">
                   <a
-                    href="tel:+919873837467"
+                    href="tel:+919310076503"
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-200 text-brand-red bg-zinc-50 hover:bg-zinc-100 font-extrabold text-sm transition-all"
                   >
                     <Phone className="h-4 w-4" />
                     <span>Call Us</span>
                   </a>
                   <a
-                    href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
+                    href="https://wa.me/919310076503?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Gurgaon%20campus.%20Please%20share%20details."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-zinc-200 text-emerald-600 bg-zinc-50 hover:bg-zinc-100 font-extrabold text-sm transition-all"
@@ -274,7 +274,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
                     onOpenDemo("Request Callback");
                   }}
                 >
-                  <Phone className="h-4.5 w-4.5" />
+                  <Phone className="h-4 w-4" />
                   <span>Request Callback</span>
                 </Button>
               </div>

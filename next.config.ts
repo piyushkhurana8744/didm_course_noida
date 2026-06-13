@@ -59,6 +59,34 @@ const nextConfig: NextConfig = {
         source: "/noida/faq",
         destination: "/noida",
       },
+      {
+        source: "/gurgaon/highlights",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/curriculum",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/pricing",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/courses",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/placements",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/testimonials",
+        destination: "/gurgaon",
+      },
+      {
+        source: "/gurgaon/faq",
+        destination: "/gurgaon",
+      },
     ];
   },
 };
