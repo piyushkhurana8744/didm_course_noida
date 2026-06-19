@@ -168,7 +168,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
               {/* Phone Icon */}
               <a
                 href="tel:+919873837467"
-                className="p-2 text-brand-red bg-zinc-50 border border-zinc-200 rounded-lg hover:text-red-650 transition-colors"
+                className="p-2 text-brand-red bg-zinc-50 border border-zinc-200 rounded-lg hover:text-red-650 transition-colors hidden sm:inline-flex"
                 title="Call Advisor"
               >
                 <Phone className="h-4.5 w-4.5" />
@@ -179,7 +179,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
                 href="https://wa.me/919873837467?text=Hi!%20I%20am%20interested%20in%20the%20Digital%20Marketing%20Course%20at%20Noida%20campus.%20Please%20share%20details."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-emerald-600 bg-zinc-50 border border-zinc-200 rounded-lg hover:text-emerald-550 transition-colors"
+                className="p-2 text-emerald-600 bg-zinc-50 border border-zinc-200 rounded-lg hover:text-emerald-555 transition-colors hidden sm:inline-flex"
                 title="WhatsApp Advisor"
               >
                 <svg className="h-4.5 w-4.5 fill-current" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
@@ -193,7 +193,7 @@ export const Header = ({ onOpenDemo, showPricing = true }: HeaderProps) => {
                 alt="MSME Logo"
                 width={80}
                 height={28}
-                className="h-7 w-auto object-contain xs:hidden mr-2"
+                className="h-7 w-auto object-contain hidden xs:block mr-2"
               />
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

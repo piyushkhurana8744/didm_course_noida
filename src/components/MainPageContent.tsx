@@ -25,7 +25,7 @@ import { useToast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ShieldCheck, Mail, Phone, User, MapPin } from "lucide-react";
+import { ShieldCheck, Mail, Phone, User, MapPin, ChevronDown, GraduationCap, ArrowRight, FileText } from "lucide-react";
 import { CENTERS } from "@/data/content";
 import { 
   contactFormSchema, 
@@ -35,7 +35,7 @@ import {
   phoneSchema, 
   centerSchema 
 } from "@/utils/validation";
-import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
+import { TurnstileCaptcha, TurnstileCaptchaRef, resetTurnstileCaptcha } from "@/components/TurnstileCaptcha";
 
 interface MainPageContentProps {
   showPricing: boolean;
@@ -93,24 +93,25 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
   const [videoUrl, setVideoUrl] = React.useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [brochureCenter, setBrochureCenter] = React.useState("Noida");
 
   // Custom CAPTCHA references and state
-  const demoRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
-  const brochureRecaptchaRef = React.useRef<CustomCaptchaRef>(null);
-  const [brochureToken, setBrochureToken] = React.useState<{ answer: string; signature: string } | null>(null);
+  const demoRecaptchaRef = React.useRef<TurnstileCaptchaRef>(null);
+  const brochureRecaptchaRef = React.useRef<TurnstileCaptchaRef>(null);
+  const [brochureToken, setBrochureToken] = React.useState<string | null>(null);
 
   const [demoResetToggle, setDemoResetToggle] = React.useState(0);
   const [brochureResetToggle, setBrochureResetToggle] = React.useState(0);
 
   React.useEffect(() => {
     if (demoResetToggle > 0) {
-      resetCustomCaptcha(demoRecaptchaRef);
+      resetTurnstileCaptcha(demoRecaptchaRef);
     }
   }, [demoResetToggle]);
 
   React.useEffect(() => {
     if (brochureResetToggle > 0) {
-      resetCustomCaptcha(brochureRecaptchaRef);
+      resetTurnstileCaptcha(brochureRecaptchaRef);
     }
   }, [brochureResetToggle]);
 
@@ -120,6 +121,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -128,10 +130,11 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       email: "",
       phone: "",
       center: "Noida",
-      captchaAnswer: "",
-      captchaSignature: "",
+      captchaToken: "",
     },
   });
+
+  const captchaToken = watch("captchaToken");
 
   // Open demo class registration
   const triggerDemoModal = (courseName: string = "") => {
@@ -156,8 +159,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          captchaAnswer: data.captchaAnswer,
-          captchaSignature: data.captchaSignature,
+          captchaToken: data.captchaToken,
           formType: "DIDM Noida Adword Form 2",
         }),
       });
@@ -174,8 +176,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
         email: "",
         phone: "",
         center: "Noida",
-        captchaAnswer: "",
-        captchaSignature: "",
+        captchaToken: "",
       });
       setDemoResetToggle(prev => prev + 1);
       router.push("/thank-you");
@@ -227,7 +228,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
     const sanitizedCenter = centerResult.data;
 
     if (!brochureToken) {
-      toast("Please solve the math challenge to prove you are human.", "error");
+      toast("Please verify that you are human.", "error");
       return;
     }
 
@@ -242,8 +243,7 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
           email: sanitizedEmail,
           phone: sanitizedPhone,
           center: sanitizedCenter,
-          captchaAnswer: brochureToken.answer,
-          captchaSignature: brochureToken.signature,
+          captchaToken: brochureToken,
           formType: "Brochure Download Form",
         }),
       });
@@ -353,215 +353,332 @@ export function MainPageContent({ showPricing }: MainPageContentProps) {
       <Dialog
         isOpen={isDemoOpen}
         onClose={() => setIsDemoOpen(false)}
-        title={selectedCourse === "Request Callback" ? "Request a Callback" : (selectedCourse ? `Register: ${selectedCourse}` : "Book Your Free Demo Class")}
+        variant="form"
       >
-        <form onSubmit={handleSubmit(handleDemoSubmit)} className="space-y-4 text-left">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5 text-brand-red" /> Full Name
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. Rahul Sharma"
-              {...register("name", {
-                onBlur: (e) => {
-                  e.target.value = e.target.value.trim().replace(/\s+/g, " ");
-                }
-              })}
-              disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
-                errors.name ? "border-red-500" : "border-zinc-300"
-              }`}
-            />
-            {errors.name && <span className="text-xs text-red-500 font-semibold">{errors.name.message}</span>}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <Mail className="h-3.5 w-3.5 text-brand-red" /> Email
-            </label>
-            <input
-              type="email"
-              placeholder="e.g. rahul@gmail.com"
-              {...register("email", {
-                onBlur: (e) => {
-                  e.target.value = e.target.value.trim();
-                }
-              })}
-              disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
-                errors.email ? "border-red-500" : "border-zinc-300"
-              }`}
-            />
-            {errors.email && <span className="text-xs text-red-500 font-semibold">{errors.email.message}</span>}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <Phone className="h-3.5 w-3.5 text-brand-red" /> Mobile Phone
-            </label>
-            <input
-              type="tel"
-              placeholder="98765 43210"
-              maxLength={10}
-              {...register("phone", {
-                onChange: (e) => {
-                  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-                }
-              })}
-              disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all ${
-                errors.phone ? "border-red-500" : "border-zinc-300"
-              }`}
-            />
-            {errors.phone && <span className="text-xs text-red-500 font-semibold">{errors.phone.message}</span>}
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-brand-red" /> Choose Center Near You..
-            </label>
-            <select
-              {...register("center")}
-              disabled={isSubmitting}
-              className={`w-full bg-zinc-50 border rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer ${
-                errors.center ? "border-red-500" : "border-zinc-300"
-              }`}
-            >
-              <option value="">Choose Center Near You..</option>
-              {CENTERS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
-          </div>
-
-          {/* Spam Protection - Custom math CAPTCHA */}
-          <CustomCaptcha
-            ref={demoRecaptchaRef}
-            id="modal-demo-captcha"
-            size="sm"
-            error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
-            onChange={(val) => {
-              setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
-              setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
-            }}
-          />
-
-          <div className="flex items-center gap-2 py-1">
-            <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span className="text-[10px] text-zinc-500 font-bold">
-              ISO 9001:2015 Admissions Desk. Support hours: 9AM - 7PM daily.
+        {/* Branded Red Header */}
+        <div className="bg-[#d6000c] px-4 py-2 text-white flex flex-col justify-between relative pr-10">
+          {/* Top Row: Pill and Location */}
+          <div className="flex items-center justify-between w-full">
+            <span className="text-[9px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full text-white">
+              FREE DEMO CLASS
+            </span>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-white">
+              {(watch("center") || "Noida").toUpperCase()}
             </span>
           </div>
+          {/* Bottom Row: Icon + Title */}
+          <div className="mt-1.5 flex items-center gap-2">
+            <GraduationCap className="h-4.5 w-4.5 text-white fill-white/10 shrink-0" />
+            <h3 className="text-sm font-bold tracking-tight uppercase text-white">
+              {selectedCourse === "Request Callback" ? "Request a Callback" : "BOOK FREE TRIAL CLASS"}
+            </h3>
+          </div>
+        </div>
 
-          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-2 cursor-pointer font-bold">
-            {isSubmitting ? "Locking Seat..." : (selectedCourse === "Request Callback" ? "Request a Callback" : "Confirm Free Class Booking")}
-          </Button>
-        </form>
+        {/* Form Body */}
+        <div className="bg-[#f8f9fa] p-3.5">
+          <form onSubmit={handleSubmit(handleDemoSubmit)} className="space-y-2 text-left">
+            {/* Full Name */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  disabled={isSubmitting}
+                  {...register("name", {
+                    onBlur: (e) => {
+                      e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                    }
+                  })}
+                  className={`w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm ${
+                    errors.name ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
+              {errors.name && <span className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.name.message}</span>}
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  disabled={isSubmitting}
+                  {...register("email", {
+                    onBlur: (e) => {
+                      e.target.value = e.target.value.trim();
+                    }
+                  })}
+                  className={`w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm ${
+                    errors.email ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
+              {errors.email && <span className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.email.message}</span>}
+            </div>
+
+            {/* Mobile Phone */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  maxLength={10}
+                  disabled={isSubmitting}
+                  {...register("phone", {
+                    onChange: (e) => {
+                      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    }
+                  })}
+                  className={`w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm ${
+                    errors.phone ? "border-red-500" : ""
+                  }`}
+                />
+              </div>
+              {errors.phone && <span className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.phone.message}</span>}
+            </div>
+
+            {/* Choose Center */}
+            <div className="flex flex-col gap-1">
+              <div className="relative">
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+                <select
+                  {...register("center")}
+                  disabled={isSubmitting}
+                  className={`w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-9 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm cursor-pointer appearance-none ${
+                    errors.center ? "border-red-500" : ""
+                  }`}
+                >
+                  <option value="">Choose Center Near You..</option>
+                  {CENTERS.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+              </div>
+              {errors.center && <span className="text-[10px] text-red-500 font-semibold pl-1 leading-tight">{errors.center.message}</span>}
+            </div>
+
+            {/* Terms & Privacy Checkbox */}
+            <div className="flex items-start gap-1.5 py-0 text-left">
+              <input
+                type="checkbox"
+                id="modal-demo-terms"
+                required
+                defaultChecked
+                className="mt-[2px] h-3.5 w-3.5 rounded border-[#e5e7eb] text-[#d6000c] focus:ring-[#d6000c] cursor-pointer"
+              />
+              <label htmlFor="modal-demo-terms" className="text-[11px] text-zinc-600 font-medium select-none cursor-pointer leading-tight">
+                I agree to DIDM <span className="text-[#d6000c] font-bold">Terms</span> & <span className="text-[#d6000c] font-bold">Privacy Policy</span>
+              </label>
+            </div>
+
+            {/* Spam Protection - Turnstile */}
+            <div className="w-full my-0.5">
+              <div className="w-full flex justify-center items-center h-[58px] overflow-hidden">
+                <div className="w-full scale-[0.9] origin-center flex justify-center items-center">
+                  <TurnstileCaptcha
+                    ref={demoRecaptchaRef}
+                    id="modal-demo-captcha"
+                    size="sm"
+                    variant="clean"
+                    widgetSize="normal"
+                    onChange={(token) => {
+                      setValue("captchaToken", token || "", { shouldValidate: true });
+                    }}
+                  />
+                </div>
+              </div>
+              {errors.captchaToken && (
+                <span className="text-[10px] text-red-500 font-semibold pl-1 leading-tight mt-0.5">{errors.captchaToken.message}</span>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting || !captchaToken}
+              className="w-full bg-[#d6000c] hover:bg-[#c0000a] text-white py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md shadow-red-500/10 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center gap-2 justify-center w-full">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                  RESERVING...
+                </span>
+              ) : (
+                <>
+                  {selectedCourse === "Request Callback" ? "REQUEST CALLBACK" : "RESERVE MY SEAT"}
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </Dialog>
 
       {/* B. Download Syllabus Brochure Modal */}
       <Dialog
         isOpen={isBrochureOpen}
         onClose={() => setIsBrochureOpen(false)}
-        title="Download Course Brochure"
+        variant="form"
       >
-        <form onSubmit={handleBrochureSubmit} className="space-y-4 text-left">
-          <p className="text-xs text-zinc-655 mb-2 leading-relaxed font-medium">
-            Enter your details below to receive the complete 2026 digital marketing curriculum PDF file directly on your device.
-          </p>
-
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="b-name" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5 text-brand-red" /> Full Name
-            </label>
-            <input
-              id="b-name"
-              name="brochure-name"
-              type="text"
-              required
-              placeholder="e.g. Rahul Sharma"
-              onBlur={(e) => {
-                e.target.value = e.target.value.trim().replace(/\s+/g, " ");
-              }}
-              disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
-            />
+            {/* Branded Red Header */}
+        <div className="bg-[#d6000c] px-4 py-2 text-white flex flex-col justify-between relative pr-10">
+          {/* Top Row: Pill and Location */}
+          <div className="flex items-center justify-between w-full">
+            <span className="text-[9px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-0.5 rounded-full text-white">
+              SYLLABUS PDF
+            </span>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-white">
+              {brochureCenter.toUpperCase()}
+            </span>
           </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="b-email" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <Mail className="h-3.5 w-3.5 text-brand-red" /> Email
-            </label>
-            <input
-              id="b-email"
-              name="brochure-email"
-              type="email"
-              required
-              placeholder="e.g. rahul@gmail.com"
-              onBlur={(e) => {
-                e.target.value = e.target.value.trim();
-              }}
-              disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
-            />
+          {/* Bottom Row: Icon + Title */}
+          <div className="mt-1.5 flex items-center gap-2">
+            <FileText className="h-4.5 w-4.5 text-white fill-white/10 shrink-0" />
+            <h3 className="text-sm font-bold tracking-tight uppercase text-white">
+              DOWNLOAD FREE BROCHURE
+            </h3>
           </div>
+        </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="b-phone" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <Phone className="h-3.5 w-3.5 text-brand-red" /> Mobile Phone
-            </label>
-            <input
-              id="b-phone"
-              name="brochure-phone"
-              type="tel"
-              required
-              maxLength={10}
-              onInput={(e) => {
-                const target = e.target as HTMLInputElement;
-                target.value = target.value.replace(/\D/g, "").slice(0, 10);
-              }}
-              placeholder="98765 43210"
-              disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all"
-            />
-          </div>
+        {/* Form Body */}
+        <div className="bg-[#f8f9fa] p-3.5">
+          <form onSubmit={handleBrochureSubmit} className="space-y-2 text-left">
+            <p className="text-[11px] text-zinc-500 -mt-1 mb-2 leading-relaxed font-semibold">
+              Enter your details below to receive the complete 2026 digital marketing curriculum PDF file directly on your device.
+            </p>
 
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="b-center" className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-brand-red" /> Choose Center Near You..
-            </label>
-            <select
-              id="b-center"
-              name="brochure-center"
-              required
-              disabled={isSubmitting}
-              className="w-full bg-zinc-50 border border-zinc-300 rounded-xl py-3 px-4 text-sm text-zinc-855 placeholder-zinc-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red transition-all cursor-pointer"
+            {/* Full Name */}
+            <div className="relative">
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+              <input
+                id="b-name"
+                name="brochure-name"
+                type="text"
+                required
+                placeholder="Full Name"
+                onBlur={(e) => {
+                  e.target.value = e.target.value.trim().replace(/\s+/g, " ");
+                }}
+                disabled={isSubmitting}
+                className="w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="relative">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+              <input
+                id="b-email"
+                name="brochure-email"
+                type="email"
+                required
+                placeholder="Email Address"
+                onBlur={(e) => {
+                  e.target.value = e.target.value.trim();
+                }}
+                disabled={isSubmitting}
+                className="w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm"
+              />
+            </div>
+
+            {/* Phone Number */}
+            <div className="relative">
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+              <input
+                id="b-phone"
+                name="brochure-phone"
+                type="tel"
+                required
+                maxLength={10}
+                onInput={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = target.value.replace(/\D/g, "").slice(0, 10);
+                }}
+                placeholder="Phone Number"
+                disabled={isSubmitting}
+                className="w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-3.5 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm"
+              />
+            </div>
+
+            {/* Choose Center */}
+            <div className="relative">
+              <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+              <select
+                id="b-center"
+                name="brochure-center"
+                required
+                disabled={isSubmitting}
+                onChange={(e) => setBrochureCenter(e.target.value)}
+                className="w-full border border-[#e5e7eb] bg-white rounded-lg py-1.5 pl-9.5 pr-9 text-[13px] text-zinc-800 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[#d6000c] transition-all shadow-sm cursor-pointer appearance-none"
+              >
+                <option value="">Choose Center Near You..</option>
+                {CENTERS.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-400 pointer-events-none" />
+            </div>
+
+            {/* Terms & Privacy Checkbox */}
+            <div className="flex items-start gap-1.5 py-0 text-left">
+              <input
+                type="checkbox"
+                id="modal-brochure-terms"
+                required
+                defaultChecked
+                className="mt-[2px] h-3.5 w-3.5 rounded border-[#e5e7eb] text-[#d6000c] focus:ring-[#d6000c] cursor-pointer"
+              />
+              <label htmlFor="modal-brochure-terms" className="text-[11px] text-zinc-600 font-medium select-none cursor-pointer leading-tight">
+                I agree to DIDM <span className="text-[#d6000c] font-bold">Terms</span> & <span className="text-[#d6000c] font-bold">Privacy Policy</span>
+              </label>
+            </div>
+
+            {/* Spam Protection - Turnstile */}
+            <div className="w-full my-0.5">
+              <div className="w-full flex justify-center items-center h-[58px] overflow-hidden">
+                <div className="w-full scale-[0.9] origin-center flex justify-center items-center">
+                  <TurnstileCaptcha
+                    ref={brochureRecaptchaRef}
+                    id="modal-brochure-captcha"
+                    size="sm"
+                    variant="clean"
+                    widgetSize="normal"
+                    onChange={(token) => setBrochureToken(token)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting || !brochureToken}
+              className="w-full bg-[#d6000c] hover:bg-[#c0000a] text-white py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all duration-300 shadow-md shadow-red-500/10 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed mt-1"
             >
-              <option value="">Choose Center Near You..</option>
-              {CENTERS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Spam Protection - Custom math CAPTCHA */}
-          <CustomCaptcha
-            ref={brochureRecaptchaRef}
-            id="modal-brochure-captcha"
-            size="sm"
-            onChange={(val) => setBrochureToken(val)}
-          />
-
-          <Button variant="primary" size="lg" type="submit" disabled={isSubmitting} className="w-full mt-4 cursor-pointer font-bold">
-            {isSubmitting ? "Generating PDF..." : "Download Free Brochure Now"}
-          </Button>
-        </form>
+              {isSubmitting ? (
+                <span className="flex items-center gap-2 justify-center w-full">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                  PROCESSING...
+                </span>
+              ) : (
+                <>
+                  DOWNLOAD PDF NOW
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </Dialog>
 
       {/* C. Video Testimonial Player Modal */}

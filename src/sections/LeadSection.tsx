@@ -11,7 +11,7 @@ import { Play, Sparkles, ShieldCheck, Mail, Phone, User, MapPin } from "lucide-r
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 import { contactFormSchema, ContactFormValues } from "@/utils/validation";
-import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
+import { TurnstileCaptcha, TurnstileCaptchaRef, resetTurnstileCaptcha } from "@/components/TurnstileCaptcha";
 
 interface LeadSectionProps {
   onOpenVideo: () => void;
@@ -21,13 +21,13 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const recaptchaRef = React.useRef<TurnstileCaptchaRef>(null);
 
   const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
 
   React.useEffect(() => {
     if (recaptchaResetToggle > 0) {
-      resetCustomCaptcha(recaptchaRef);
+      resetTurnstileCaptcha(recaptchaRef);
     }
   }, [recaptchaResetToggle]);
 
@@ -36,6 +36,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -44,10 +45,11 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
       email: "",
       phone: "",
       center: "Noida",
-      captchaAnswer: "",
-      captchaSignature: "",
+      captchaToken: "",
     },
   });
+
+  const captchaToken = watch("captchaToken");
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
@@ -61,8 +63,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          captchaAnswer: data.captchaAnswer,
-          captchaSignature: data.captchaSignature,
+          captchaToken: data.captchaToken,
           formType: "Lead Section Form",
         }),
       });
@@ -81,8 +82,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
         email: "",
         phone: "",
         center: "Noida",
-        captchaAnswer: "",
-        captchaSignature: "",
+        captchaToken: "",
       });
       setRecaptchaResetToggle(prev => prev + 1);
       router.push("/thank-you");
@@ -287,15 +287,15 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                    )}
                  </div>
 
-                {/* Spam Protection - Custom math CAPTCHA */}
-                 <CustomCaptcha
+                {/* Spam Protection - Turnstile */}
+                 <TurnstileCaptcha
                    ref={recaptchaRef}
                    id="lead-section-captcha"
                    size="sm"
-                   error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
-                   onChange={(val) => {
-                     setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
-                     setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                   variant="clean"
+                   error={errors.captchaToken?.message}
+                   onChange={(token) => {
+                     setValue("captchaToken", token || "", { shouldValidate: true });
                    }}
                  />
 
@@ -312,7 +312,7 @@ export const LeadSection = ({ onOpenVideo }: LeadSectionProps) => {
                   variant="primary"
                   size="lg"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !captchaToken}
                   className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 shadow-lg shadow-brand-red/10 font-bold"
                 >
                   {isSubmitting ? (

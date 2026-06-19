@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/gurgaon/*": ["./src/gurgaon/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

@@ -28,20 +28,20 @@ import {
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 import { contactFormSchema, ContactFormValues } from "@/utils/validation";
-import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
+import { TurnstileCaptcha, TurnstileCaptchaRef, resetTurnstileCaptcha } from "@/components/TurnstileCaptcha";
 
 export const ProgramHighlights = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
-  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const recaptchaRef = React.useRef<TurnstileCaptchaRef>(null);
 
   const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
 
   React.useEffect(() => {
     if (recaptchaResetToggle > 0) {
-      resetCustomCaptcha(recaptchaRef);
+      resetTurnstileCaptcha(recaptchaRef);
     }
   }, [recaptchaResetToggle]);
 
@@ -50,6 +50,7 @@ export const ProgramHighlights = () => {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -58,10 +59,11 @@ export const ProgramHighlights = () => {
       phone: "",
       email: "",
       center: "Noida",
-      captchaAnswer: "",
-      captchaSignature: "",
+      captchaToken: "",
     },
   });
+
+  const captchaToken = watch("captchaToken");
 
   const onSubmitInquiry = async (data: ContactFormValues) => {
     setIsSubmitting(true);
@@ -75,8 +77,7 @@ export const ProgramHighlights = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          captchaAnswer: data.captchaAnswer,
-          captchaSignature: data.captchaSignature,
+          captchaToken: data.captchaToken,
           formType: "Download Brochure Form",
         }),
       });
@@ -101,8 +102,7 @@ export const ProgramHighlights = () => {
         phone: "",
         email: "",
         center: "Noida",
-        captchaAnswer: "",
-        captchaSignature: "",
+        captchaToken: "",
       });
       setRecaptchaResetToggle(prev => prev + 1);
       router.push("/thank-you");
@@ -418,15 +418,15 @@ export const ProgramHighlights = () => {
                       {errors.center && <span className="text-xs text-red-500 font-semibold">{errors.center.message}</span>}
                     </div>
 
-                    {/* Spam Protection - Custom math CAPTCHA */}
-                    <CustomCaptcha
+                    {/* Spam Protection - Turnstile */}
+                    <TurnstileCaptcha
                       ref={recaptchaRef}
                       id="highlights-captcha"
                       size="sm"
-                      error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
-                      onChange={(val) => {
-                        setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
-                        setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
+                      variant="clean"
+                      error={errors.captchaToken?.message}
+                      onChange={(token) => {
+                        setValue("captchaToken", token || "", { shouldValidate: true });
                       }}
                     />
 
@@ -435,7 +435,7 @@ export const ProgramHighlights = () => {
                       variant="primary"
                       size="lg"
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !captchaToken}
                       className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3.5 shadow-md shadow-brand-red/10 font-bold"
                     >
                       {isSubmitting ? (

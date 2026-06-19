@@ -205,7 +205,7 @@ export default function RootLayout({
         */}
 
         <ToastProvider>
-          <div className="flex-1 flex flex-col relative w-full">
+          <div className="flex-1 flex flex-col relative w-full overflow-x-hidden">
             {children}
           </div>
         </ToastProvider>

@@ -578,6 +578,7 @@ export const FAQ_DATA: FAQItem[] = [
 ];
 
 export const CENTERS = [
-  "Noida"
+  "Noida",
+  "Gurgaon"
 ];
 

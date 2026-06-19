@@ -11,20 +11,20 @@ import { User, Phone, Mail, ChevronDown, Play, Sparkles, Quote } from "lucide-re
 import { useRouter } from "next/navigation";
 import { CENTERS } from "@/data/content";
 import { contactFormSchema, ContactFormValues } from "@/utils/validation";
-import { CustomCaptcha, CustomCaptchaRef, resetCustomCaptcha } from "@/components/CustomCaptcha";
+import { TurnstileCaptcha, TurnstileCaptchaRef, resetTurnstileCaptcha } from "@/components/TurnstileCaptcha";
 
 export const VideoCounselling = () => {
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isPlaying, setIsPlaying] = React.useState(false);
-  const recaptchaRef = React.useRef<CustomCaptchaRef>(null);
+  const recaptchaRef = React.useRef<TurnstileCaptchaRef>(null);
 
   const [recaptchaResetToggle, setRecaptchaResetToggle] = React.useState(0);
 
   React.useEffect(() => {
     if (recaptchaResetToggle > 0) {
-      resetCustomCaptcha(recaptchaRef);
+      resetTurnstileCaptcha(recaptchaRef);
     }
   }, [recaptchaResetToggle]);
 
@@ -33,6 +33,7 @@ export const VideoCounselling = () => {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -41,10 +42,11 @@ export const VideoCounselling = () => {
       phone: "",
       email: "",
       center: "Noida",
-      captchaAnswer: "",
-      captchaSignature: "",
+      captchaToken: "",
     },
   });
+
+  const captchaToken = watch("captchaToken");
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
@@ -58,8 +60,7 @@ export const VideoCounselling = () => {
           email: data.email,
           phone: data.phone,
           center: data.center,
-          captchaAnswer: data.captchaAnswer,
-          captchaSignature: data.captchaSignature,
+          captchaToken: data.captchaToken,
           formType: "Free Counselling Request Form",
         }),
       });
@@ -75,8 +76,7 @@ export const VideoCounselling = () => {
         phone: "",
         email: "",
         center: "Noida",
-        captchaAnswer: "",
-        captchaSignature: "",
+        captchaToken: "",
       });
       setRecaptchaResetToggle(prev => prev + 1);
       router.push("/thank-you");
@@ -295,24 +295,33 @@ export const VideoCounselling = () => {
                   {errors.center && <span className="text-xs text-amber-300 font-bold">{errors.center.message}</span>}
                 </div>
 
-                {/* Spam Protection - Custom math CAPTCHA */}
-                <CustomCaptcha
-                  ref={recaptchaRef}
-                  id="counselling-captcha"
-                  size="sm"
-                  error={errors.captchaAnswer?.message || errors.captchaSignature?.message}
-                  onChange={(val) => {
-                    setValue("captchaAnswer", val?.answer || "", { shouldValidate: true });
-                    setValue("captchaSignature", val?.signature || "", { shouldValidate: true });
-                  }}
-                />
+                {/* Spam Protection - Turnstile */}
+                <div className="w-full my-0.5">
+                  <div className="w-full min-h-[65px]">
+                    <TurnstileCaptcha
+                      ref={recaptchaRef}
+                      id="counselling-captcha"
+                      size="sm"
+                      variant="clean"
+                      widgetSize="flexible"
+                      onChange={(token) => {
+                        setValue("captchaToken", token || "", { shouldValidate: true });
+                      }}
+                    />
+                  </div>
+                  {errors.captchaToken && (
+                    <span className="text-xs text-amber-300 font-bold mt-0.5 block pl-1">
+                      {errors.captchaToken.message}
+                    </span>
+                  )}
+                </div>
 
                 {/* Submit button */}
                 <Button
                   variant="primary"
                   size="lg"
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !captchaToken}
                   className="w-full bg-[#c21a1a] hover:bg-[#b01616] active:bg-[#9d1212] text-white border border-[#b01616] shadow-md py-3.5 mt-4 cursor-pointer font-bold rounded-lg uppercase tracking-wide transition-all"
                 >
                   {isSubmitting ? "Locking seat..." : "Submit Your Request"}

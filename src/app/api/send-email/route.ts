@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { contactFormSchema, sanitizeInput } from "@/utils/validation";
-import { verifyCaptchaSignature } from "@/utils/captcha";
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +12,7 @@ export async function POST(request: Request) {
       email: body.email,
       phone: body.phone,
       center: body.center,
-      captchaAnswer: body.captchaAnswer,
-      captchaSignature: body.captchaSignature,
+      captchaToken: body.captchaToken,
     });
 
     if (!validationResult.success) {
@@ -27,20 +25,46 @@ export async function POST(request: Request) {
             email: formattedErrors.email?._errors[0],
             phone: formattedErrors.phone?._errors[0],
             center: formattedErrors.center?._errors[0],
-            captchaAnswer: formattedErrors.captchaAnswer?._errors[0],
-            captchaSignature: formattedErrors.captchaSignature?._errors[0],
+            captchaToken: formattedErrors.captchaToken?._errors[0],
           },
         },
         { status: 400 }
       );
     }
 
-    const { name, email, phone, center, captchaAnswer, captchaSignature } = validationResult.data;
+    const { name, email, phone, center, captchaToken } = validationResult.data;
     const formType = body.formType || "Inquiry Form";
 
-    // Custom CAPTCHA verification against signature
-    const isCaptchaValid = verifyCaptchaSignature(captchaAnswer, captchaSignature);
-    if (!isCaptchaValid) {
+    // Cloudflare Turnstile CAPTCHA verification
+    const siteverifyUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+    
+    // Retrieve client IP from standard proxy headers
+    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0].trim()
+      || request.headers.get("x-real-ip")
+      || "";
+
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || "1x0000000000000000000000000000000A";
+
+    if (!process.env.TURNSTILE_SECRET_KEY) {
+      console.warn("TURNSTILE_SECRET_KEY is not defined in environment variables. Falling back to testing secret key.");
+    }
+
+    const verifyResponse = await fetch(siteverifyUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        secret: turnstileSecret,
+        response: captchaToken,
+        remoteip: clientIp,
+      }),
+    });
+
+    const verifyResult = await verifyResponse.json();
+
+    if (!verifyResult.success) {
+      console.error("Cloudflare Turnstile verification failed. Errors:", verifyResult["error-codes"], "Hostname:", verifyResult.hostname);
       return NextResponse.json(
         { error: "Spam check failed: Incorrect or expired CAPTCHA solution" },
         { status: 400 }
